@@ -19,6 +19,22 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        Bank/ATM.cpp
+        Bank/ATM.h
+        Bank/Bank.cpp
+        Bank/Bank.h
+        Bank/Tracsaction.cpp
+        Bank/Tracsaction.h
+        Cards/Card.cpp
+        Cards/Card.h
+        Cards/CardType.h
+        Cards/CreditCard.cpp
+        Cards/CreditCard.h
+        Cards/CVV.h
+        Cards/DebitCard.cpp
+        Cards/DebitCard.h
+        User/User.cpp
+        User/User.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
