@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(ATM VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_PREFIX_PATH "/Users/oleksandr/Desktop/naukma/moop/Qt/6.6.0/macos")
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -41,6 +41,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ATM
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        UI/bankscreen.h UI/bankscreen.cpp UI/bankscreen.ui
+        Events/atmbuttonpressedevent.h Events/atmbuttonpressedevent.cpp
+
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ATM APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
