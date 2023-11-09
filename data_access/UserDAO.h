@@ -5,6 +5,9 @@
 #ifndef ATM_USERDAO_H
 #define ATM_USERDAO_H
 
+#include <iostream>
+#include <QtSql/QSqlQuery>
+#include <QtCore/QObject>
 #include "User/User.h"
 
 class UserDAO {

@@ -9,7 +9,7 @@ struct Card {
     CVV cvv;
     size_t expireDate;
     CardType cardType;
-    virtual size_t GetTransactionComission() const = 0;
-    virtual size_t GetWidthdrawComission() const = 0;
+    virtual size_t GetTransactionCommission() const = 0;
+    virtual size_t GetWithdrawCommission() const = 0;
     virtual ~Card();
 };

@@ -42,7 +42,9 @@ add_executable(${PROJECT_NAME}
         data_access/CardDAO.cpp data_access/CardDAO.h
         data_access/UserDAO.cpp data_access/UserDAO.h
         data_access/ATM_DAO.cpp data_access/ATM_DAO.h
-        data_access/ATM_DAO.cpp data_access/ATM_DAO.h data_access/TransactionDAO.cpp data_access/TransactionDAO.h)
+        data_access/ATM_DAO.cpp data_access/ATM_DAO.h
+        data_access/TransactionDAO.cpp data_access/TransactionDAO.h
+        data_access/IncludeDataAccess.h)
 
 
 target_link_libraries(${PROJECT_NAME}
