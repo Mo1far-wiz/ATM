@@ -44,8 +44,9 @@ add_executable(${PROJECT_NAME}
         data_access/ATM_DAO.cpp data_access/ATM_DAO.h
         data_access/ATM_DAO.cpp data_access/ATM_DAO.h
         data_access/TransactionDAO.cpp data_access/TransactionDAO.h
-        data_access/IncludeDataAccess.h)
-
+        data_access/IncludeDataAccess.h
+        UI/bankscreen.h UI/bankscreen.cpp UI/bankscreen.ui
+        Events/atmbuttonpressedevent.h Events/atmbuttonpressedevent.cpp)
 
 target_link_libraries(${PROJECT_NAME}
         Qt6::Core

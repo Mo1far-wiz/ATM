@@ -17,12 +17,13 @@ void TransactionDAO::initialize() {
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Transaction' "
-                          "(id SERIAL PRIMARY KEY AUTOINCREMENT, "
-                          "fromCardId SERIAL NOT NULL, "
-                          "toCardId SERIAL NOT NULL, "
+                          "(id INTEGER PRIMARY KEY, "
+                          "fromCardId INT NOT NULL, "
+                          "toCardId INT NOT NULL, "
                           "amount INT NOT NULL, "
-                          "FOREIGN KEY(fromCardId) REFERENCES Card(id),"
+                          "FOREIGN KEY(fromCardId) REFERENCES Card(id), "
                           "FOREIGN KEY(toCardId) REFERENCES Card(id));");
+
 
     qDebug() << "creation of the 'Transaction' table was successful: " << createQuery.isActive();
     isInitialized = true;
