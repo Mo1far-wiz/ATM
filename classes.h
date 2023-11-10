@@ -13,9 +13,6 @@ struct User;
 struct Card;
 struct DebitCard;
 struct Transaction;
-struct CVV {
-	uint8_t cvv[3];
-};
 
 struct User {
 	User() {
@@ -37,16 +34,45 @@ enum class CardType {
 	Debit, Credit
 };
 
+struct CVV {
+	uint8_t cvv[3];
+};
+
 struct Card {
-	size_t id;
-	std::string cardNumber;
-	size_t currentBalance;
-	CVV cvv;
-	size_t expireDate;
-	CardType cardType;
+public:
+	size_t GetId() const {
+		return _id;
+	}
+	std::string GetCardNumber() const {
+		return _cardNumber;
+	}
+	size_t GetCurrentBalance() const {
+		return _currentBalance;
+	}
+	const CVV& GetCVV() const {
+		return _cvv;
+	}
+	const std::string& GetPinCode() const {
+		return _pinCode;
+	}
+	size_t GetExpireDate() const {
+		return _expireDate;
+	}
+	CardType GetCardType() const {
+		return _cardType;
+	}
 	virtual size_t GetTransactionComission() const = 0;
 	virtual size_t GetWidthdrawComission() const = 0;
-	virtual ~Card() {};
+	virtual ~Card() {}
+protected:
+	Card() {}
+	size_t _id;
+	std::string _cardNumber;
+	size_t _currentBalance;
+	CVV _cvv;
+	std::string _pinCode;
+	size_t _expireDate;
+	CardType _cardType;
 };
 
 struct DebitCard : Card {
