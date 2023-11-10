@@ -25,10 +25,12 @@ public:
 
     void deleteById(const QString& id) const;
 
+    void createCard(const Card& card) const;
+
 private:
     static void initialize();
 
-    Card* buildCard(const QSqlQuery&) const;
+    Card* deserializeCard(const QSqlQuery &query) const;
 
     CardDAO() = default;
 };

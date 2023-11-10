@@ -8,6 +8,7 @@
 #include <iostream>
 #include <QtSql/QSqlQuery>
 #include <QtCore/QObject>
+#include "Bank/ATM.h"
 
 class ATM_DAO {
 public:
@@ -16,6 +17,8 @@ public:
     std::size_t getAvailableMoney();
 private:
     static void initialize();
+
+    ATM* deserializeATM(const QSqlQuery& query) const;
 
     ATM_DAO() = default;
 };

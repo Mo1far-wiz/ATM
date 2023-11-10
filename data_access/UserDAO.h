@@ -22,6 +22,9 @@ public:
 
 private:
     static void initialize();
+
+    User* deserializeUser(const QSqlQuery& query) const;
+
     UserDAO() = default;
 };
 

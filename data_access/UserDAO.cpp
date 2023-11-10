@@ -25,3 +25,7 @@ void UserDAO::initialize() {
     qDebug() << "creation of the 'User' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
+
+User *UserDAO::deserializeUser(const QSqlQuery &query) const {
+    return nullptr;
+}

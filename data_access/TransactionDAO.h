@@ -19,6 +19,8 @@ public:
 
 private:
     static void initialize();
+
+    Transaction* deserializeTransaction(const QSqlQuery& query) const;
     TransactionDAO() = default;
 };
 

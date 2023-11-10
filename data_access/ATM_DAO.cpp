@@ -27,3 +27,7 @@ void ATM_DAO::initialize() {
     qDebug() << "creation of the 'ATM' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
+
+ATM *ATM_DAO::deserializeATM(const QSqlQuery &query) const {
+    return nullptr;
+}

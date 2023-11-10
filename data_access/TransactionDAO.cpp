@@ -28,3 +28,7 @@ void TransactionDAO::initialize() {
     qDebug() << "creation of the 'Transaction' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
+
+Transaction *TransactionDAO::deserializeTransaction(const QSqlQuery &query) const {
+    return nullptr;
+}
