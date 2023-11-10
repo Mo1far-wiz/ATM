@@ -6,6 +6,8 @@
 #define ATM_ATM_DAO_H
 
 #include <iostream>
+#include <QtSql/QSqlQuery>
+#include <QtCore/QObject>
 
 class ATM_DAO {
 public:

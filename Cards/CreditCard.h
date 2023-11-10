@@ -1,9 +1,19 @@
 #include "Card.h"
 
-class CreditCard : Card {
+class CreditCard : public Card {
+private:
     size_t creditLimit;
-    virtual size_t GetTransactionComission() const override {};
-    virtual size_t GetWidthdrawComission() const override;
+
+public:
+    CreditCard(size_t id, const std::string& cardNumber, size_t currentBalance, const CVV& cvv,
+               size_t expireDate, const CardType& cardType, size_t creditLimit)
+            : Card(id, cardNumber, currentBalance, cvv, expireDate, cardType), creditLimit(creditLimit) {}
+
+    virtual size_t GetTransactionCommission() const override {
+        return 1;
+    }
+
+    virtual size_t GetWithdrawCommission() const override {
+        return 2;
+    }
 };
-
-
