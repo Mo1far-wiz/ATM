@@ -61,8 +61,8 @@ public:
 	CardType GetCardType() const {
 		return _cardType;
 	}
-	virtual size_t GetTransactionComission() const = 0;
-	virtual size_t GetWidthdrawComission() const = 0;
+	virtual size_t GetTransactionCommission() const = 0;
+	virtual size_t GetWidthdrawCommission() const = 0;
 	virtual ~Card() {}
 protected:
 	Card() {}
@@ -76,14 +76,14 @@ protected:
 };
 
 struct DebitCard : Card {
-	virtual size_t GetTransactionComission() const override { return 0; };
-	virtual size_t GetWidthdrawComission() const override { return 0; };
+	virtual size_t GetTransactionCommission() const override { return 0; };
+	virtual size_t GetWidthdrawCommission() const override { return 0; };
 };
 
 struct CreditCard : Card {
 	size_t creditLimit;
-	virtual size_t GetTransactionComission() const override {};
-	virtual size_t GetWidthdrawComission() const override;
+	virtual size_t GetTransactionCommission() const override {};
+	virtual size_t GetWidthdrawCommission() const override;
 };
 
 struct Transaction {
