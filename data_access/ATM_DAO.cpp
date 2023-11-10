@@ -24,7 +24,7 @@ void ATM_DAO::initialize() {
                           "moneyLeft INT NOT NULL, "
                           "currentCardId SERIAL NOT NULL);");
 
-    qDebug() << "creation of the 'ATM' table was successful: " << createQuery.isActive();
+    qInfo() << "creation of the 'ATM' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
 

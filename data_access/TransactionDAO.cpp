@@ -25,7 +25,7 @@ void TransactionDAO::initialize() {
                           "FOREIGN KEY(toCardId) REFERENCES Card(id));");
 
 
-    qDebug() << "creation of the 'Transaction' table was successful: " << createQuery.isActive();
+    qInfo() << "creation of the 'Transaction' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
 

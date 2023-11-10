@@ -2,6 +2,7 @@
 // Created by Oleksandr on 05.11.2023.
 //
 
+#include <QDate>
 #include "CardDAO.h"
 
 CardDAO &CardDAO::getInstance() {
@@ -35,8 +36,8 @@ void CardDAO::initialize() {
 
 
 
-    qDebug() << "creation of the 'CardType' table was successful: " << createQueryCardType.isActive();
-    qDebug() << "creation of the 'Card' table was successful: " << createQuery.isActive();
+    qInfo() << "creation of the 'CardType' table was successful: " << createQueryCardType.isActive();
+    qInfo() << "creation of the 'Card' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
 
@@ -44,10 +45,34 @@ Card *CardDAO::getById(const QString &id) const {
     return nullptr;
 }
 
-Card *CardDAO::deserializeCard(const QSqlQuery &query) const {
-//    Card* card = new Card(query.value(0).toUInt(), CardType(query.value(1).toInt()),
-//                          query.value(2).toString(), );
-//    if (query.value(4).toBool()) card->block();
-//    return card;
+Card *CardDAO::deserializeCard(QSqlQuery &selectQuery) const {
+    if (selectQuery.exec()) {
+        if (selectQuery.next()) {
+            // Retrieve user data from the query result and create a User object
+            uint32_t id                     = selectQuery.value("id").toUInt();
+            QString cardNumber              = selectQuery.value("cardNumber").toString();
+            QString cvv                     = selectQuery.value("cvv").toString();
+            uint32_t owner                  = selectQuery.value("owner").toUInt();
+            uint32_t currentBalance         = selectQuery.value("currentBalance").toUInt();
+            QDate expireDate                = selectQuery.value("expireDate").toDate();
+            uint32_t cardType_id            = selectQuery.value("cardType_id").toUInt();
+            uint32_t transactionCommission  = selectQuery.value("transactionCommission").toUInt();
+            uint32_t withdrawCommission     = selectQuery.value("withdrawCommission").toUInt();
+            QString pin                     = selectQuery.value("pin").toString();
+
+            Card* card = new Card(id, cardNumber.toStdString(), currentBalance, cvv, expireDate, CardType(cardType_id));
+            qInfo() << "User with ID" << id << "was found.";
+            return card;
+        } else {
+            qWarning() << "User with " << selectQuery.boundValueName(0) << selectQuery.boundValue(0).toString() << "not found.";
+        }
+    } else {
+        qCritical() << "Error retrieving user:" << selectQuery.lastError().text()
+                    <<"\n\t For query : " << selectQuery.lastQuery();
+    }
+    return nullptr;
+}
+
+Card *CardDAO::getByCardNum(const QString &id) const {
     return nullptr;
 }

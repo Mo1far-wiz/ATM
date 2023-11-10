@@ -15,22 +15,15 @@ class CardDAO {
 public:
     static CardDAO& getInstance();
 
-    void saveCard(Card&) const;
-
     Card* getById(const QString& id) const;
-
-    std::size_t getBalance(const QString& id) const;
-
-    bool updateCard(const Card&) const;
-
-    void deleteById(const QString& id) const;
+    Card* getByCardNum(const QString& id) const;
 
     void createCard(const Card& card) const;
 
 private:
     static void initialize();
 
-    Card* deserializeCard(const QSqlQuery &query) const;
+    Card* deserializeCard(QSqlQuery &query) const;
 
     CardDAO() = default;
 };

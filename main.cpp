@@ -15,18 +15,23 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    qDebug()  <<  QSqlDatabase::drivers();
+    qInfo()  <<  QSqlDatabase::drivers();
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("../db_file/db_bank.sqlite");
     if (!db.open()) {
-        qDebug() << db.lastError().text();
+        qCritical() << db.lastError().text();
         return -1;
     } else {
         // trigger initializations after the db connection is established
         ATM_DAO::getInstance();
-        UserDAO::getInstance();
+        UserDAO userDao = UserDAO::getInstance();
         CardDAO::getInstance();
         TransactionDAO::getInstance();
+
+        //userDao.addUser(0, "Frdy", "Fzbr", "+1987");
+        //User* user = userDao.getByPhoneNum("+1987");
+        User* user = userDao.getById(0);
+        std::cout << (user ? user->toString() : "") << std::endl;
     }
 
 
