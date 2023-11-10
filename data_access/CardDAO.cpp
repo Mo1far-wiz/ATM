@@ -49,4 +49,5 @@ Card *CardDAO::deserializeCard(const QSqlQuery &query) const {
 //                          query.value(2).toString(), );
 //    if (query.value(4).toBool()) card->block();
 //    return card;
+    return nullptr;
 }
