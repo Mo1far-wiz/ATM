@@ -45,8 +45,8 @@ Card *CardDAO::getById(const QString &id) const {
 }
 
 Card *CardDAO::buildCard(const QSqlQuery &query) const {
-    Card* card = new Card(query.value(0).toUInt(), CardType(query.value(1).toInt()),
-                          query.value(2).toString(), );
-    if (query.value(4).toBool()) card->block();
-    return card;
+//    Card* card = new Card(query.value(0).toUInt(), CardType(query.value(1).toInt()),
+//                          query.value(2).toString(), );
+//    if (query.value(4).toBool()) card->block();
+//    return card;
 }
