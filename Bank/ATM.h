@@ -5,6 +5,7 @@ class Card;
 struct CVV;
 
 class ATM {
+public:
     ATM(Bank& bank) : _bankRef(bank) {
     }
     ~ATM() {}

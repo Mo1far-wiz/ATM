@@ -8,6 +8,7 @@
 #include <iostream>
 #include <QtSql/QSqlQuery>
 #include <QtCore/QObject>
+
 #include "Cards/Card.h"
 
 class CardDAO {
@@ -15,22 +16,18 @@ class CardDAO {
 public:
     static CardDAO& getInstance();
 
-    void saveCard(Card&) const;
+    Card* getById(uint32_t id) const;
+    Card* getByCardNum(const QString& cardNum) const;
+    Card* getByUserId(uint32_t id) const;
+    QList<Card*> getAllUserCards(uint32_t id) const;
 
-    Card* getById(const QString& id) const;
-
-    std::size_t getBalance(const QString& id) const;
-
-    bool updateCard(const Card&) const;
-
-    void deleteById(const QString& id) const;
-
-    void createCard(const Card& card) const;
+    void addCard(const Card& card) const;
 
 private:
     static void initialize();
 
-    Card* deserializeCard(const QSqlQuery &query) const;
+    Card* deserializeCard(QSqlQuery &executedQuery) const;
+    QList<Card*> multipleCardsDeserialization(QSqlQuery &executedQuery) const;
 
     CardDAO() = default;
 };
