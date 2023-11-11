@@ -149,6 +149,7 @@ Card *CardDAO::getByUserId(uint32_t id) const {
 
 QList<Card *> CardDAO::multipleCardsDeserialization(QSqlQuery &executedQuery) const {
     QList<Card *> cards;
+
     while (executedQuery.next()) {
         Card *card = deserializeCard(executedQuery);
         if (card) {
