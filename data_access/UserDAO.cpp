@@ -3,6 +3,7 @@
 //
 
 #include "UserDAO.h"
+#include "CardDAO.h"
 
 #include <QDebug>
 #include <QtSql>
@@ -103,18 +104,20 @@ User *UserDAO::getByPhoneNum(const QString& phoneNum) const {
     return deserializeUser(selectQuery);
 }
 
-User *UserDAO::getByCardNum(const QString& cardNumber) const {
+User *UserDAO::getByCardNum(const QString& cardNum) const {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return nullptr;
     }
-    uint32_t id = 0;
-    //CardDAO::getInstance().
-    // Prepare the SQL query
-    QSqlQuery selectQuery;
-    selectQuery.prepare("SELECT * FROM User WHERE id = :id");
-    selectQuery.bindValue(":id", id);
+    if(Card* card = CardDAO::getInstance().getByCardNum(cardNum)) {
+        // Prepare the SQL query
+        QSqlQuery selectQuery;
+        selectQuery.prepare("SELECT * FROM User WHERE id = :id");
+        selectQuery.bindValue(":id", (uint32_t)card->id);   // change to user id
 
-    return deserializeUser(selectQuery);
+        return deserializeUser(selectQuery);
+    }
+
+    return nullptr;
 }
 

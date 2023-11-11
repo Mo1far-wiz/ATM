@@ -17,7 +17,7 @@ public:
 
     User* getById(uint32_t id) ;
     User* getByPhoneNum(const QString& phoneNum) const;
-    User* getByCardNum(const QString& cardNumber) const;
+    User* getByCardNum(const QString& cardNum) const;
 
     std::vector<std::size_t> getUserCards(std::size_t userId);
     static void addUser(uint32_t id, const QString &name, const QString &surname, const QString &phoneNum);

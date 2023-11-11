@@ -16,15 +16,18 @@ class CardDAO {
 public:
     static CardDAO& getInstance();
 
-    Card* getById(const QString& id) const;
-    Card* getByCardNum(const QString& id) const;
+    Card* getById(uint32_t id) const;
+    Card* getByCardNum(const QString& cardNum) const;
+    Card* getByUserId(uint32_t id) const;
+    QList<Card*> getAllUserCards(uint32_t id) const;
 
-    void createCard(const Card& card) const;
+    void addCard(const Card& card) const;
 
 private:
     static void initialize();
 
-    Card* deserializeCard(QSqlQuery &query) const;
+    Card* deserializeCard(QSqlQuery &executedQuery) const;
+    QList<Card*> multipleCardsDeserialization(QSqlQuery &executedQuery) const;
 
     CardDAO() = default;
 };
