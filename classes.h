@@ -52,7 +52,6 @@ private:
 	std::string _surname;
 	std::string _phoneNum;
 	const size_t _id;
-	//std::vector<size_t> cards;
 };
 
 enum class CardType {
@@ -201,8 +200,14 @@ public:
 	size_t GetInsertedCardId() const {
 		return _insertedCardId;
 	}
+
+	std::optional<DebitCard> GetDebitCardByNumber(const QString& num) {
+		return 
+	}
+
 	// [Method] Insert & Verify card
 	void AcceptCard(const Card&);
+
 	// [Method] Create a transaction and make Bank process it
 	void CreateTransaction(const Card& from, const Card& to, size_t amount);
 	// [Method] Check balance
@@ -218,20 +223,59 @@ private:
 	size_t _moneyLeft;
 	// Currently inserted card
 	size_t _insertedCardId;
+
+	std::optional<CreditCard> GetCreditCard() {
+	return Get<CardDAO, size_t, Card*, CreditCard>(8, &CardDAO::getCard,
+		[](Card* r) {
+			if (r->GetCardType() == CardType::Credit) {
+				CreditCard cr = std::move(*static_cast<CreditCard*>(r));
+				delete r;
+				return cr;
+			}
+			throw 0;
+		});
+	}
+
+	std::optional<DebitCard> GetDebitCard() {
+	return Get<CardDAO, size_t, Card*, DebitCard>(8, &CardDAO::getCard, [](Card* r) {
+			if (r->GetCardType() == CardType::Debit) {
+				DebitCard cr = std::move(*static_cast<DebitCard*>(r));
+				delete r;
+				return cr;
+			}
+			throw 0;
+		});
+	}
 	
 	/* --- DAO interaction --- */
 	/**
-	* Get R from DAO of T using key U
-	* @param param which will be passed to DAO of T
-	* @paraam
-	* @return requested object of type R as std::optional<R>, std::nullopt if db query failed
-	*/
-	template <class T, class U, class R = T>
-	std::optional<R> Get(const U& key, R* (T::DAO::* f)(const U&)) {
-		if (R* r = (T::DAO::getInstance().*f)(key)) {
-			R rr = std::move(*r);
-			delete r;
-			return rr;
+	 * Default handler for Get function.
+	 * By default, DAO return dynamically allocated ptr, so this handler deletes it so that user of Get doesn't have to
+	 */
+	template <class R, class U>
+	R DefaultGetHandler(U r) {
+		R rr = std::move(*r);
+		delete r;
+		return rr;
+	}
+
+	/**
+	 * Get R from DAO using its getter method which has U as arg and DaoR as return type
+	 * DaoR must be a pointer or a type that can be implicitly casted to bool
+	 * @param key param which will be passed to method of DAO
+	 * @param getter pointer to method of DAO
+	 * @param handler function, which takes DaoR and returns R, also it can throw to make function Get return std::nullopt
+	 * @return Requested object of type R as std::optional<R>, std::nullopt if db query failed, or handler has thrown something
+	 */
+	template <class DAO, class U, class DaoR, class R>
+	std::optional<R> Get(const U& key, DaoR (DAO::* getter)(const U&), R(*f)(DaoR) = DefaultGetHandler<R, DaoR>) {
+		if (DaoR r = (DAO::getInstance().*getter)(key)) {
+			try {
+				return f(r);
+			}
+			catch (...) {
+				return std::nullopt;
+			}
 		}
 		return std::nullopt;
 	}
