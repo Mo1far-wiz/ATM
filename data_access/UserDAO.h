@@ -15,10 +15,10 @@ class UserDAO {
 public:
     static UserDAO& getInstance();
 
-    [[nodiscard]] User* getById(uint32_t id) const;
+    [[nodiscard]] User* getById(const uint32_t &id) const;
     [[nodiscard]] User* getByPhoneNum(const QString& phoneNum) const;
     [[nodiscard]] User* getByCardNum(const QString& cardNum) const;
-    [[nodiscard]] QList<Card*> getAllUserCards(uint32_t userId) const;
+    [[nodiscard]] QList<Card*> getAllUserCards(const uint32_t &userId) const;
 
     static void addUser(uint32_t id, const QString &name, const QString &surname, const QString &phoneNum);
 

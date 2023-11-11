@@ -46,7 +46,7 @@ void CardDAO::initialize() {
     isInitialized = true;
 }
 
-Card *CardDAO::getById(uint32_t id) const {
+Card *CardDAO::getById(const uint32_t &id) const {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return nullptr;
@@ -71,7 +71,7 @@ Card *CardDAO::getById(uint32_t id) const {
     return nullptr;
 }
 
-Card *CardDAO::deserializeCard(QSqlQuery &executedQuery) const {
+Card *CardDAO::deserializeCard(const QSqlQuery &executedQuery) const {
     // Retrieve user data from the query result and create a Card object
     uint32_t id                     = executedQuery.value("id").toUInt();
     QString cardNumber              = executedQuery.value("cardNumber").toString();
@@ -128,7 +128,7 @@ Card *CardDAO::getByCardNum(const QString &cardNum) const {
     return nullptr;
 }
 
-Card *CardDAO::getByUserId(uint32_t id) const {
+Card *CardDAO::getByUserId(const uint32_t &id) const {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return nullptr;
@@ -171,7 +171,7 @@ QList<Card *> CardDAO::multipleCardsDeserialization(QSqlQuery &executedQuery) co
     return cards;
 }
 
-QList<Card *> CardDAO::getAllUserCards(uint32_t id) const {
+QList<Card *> CardDAO::getAllUserCards(const uint32_t &id) const {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return {};
