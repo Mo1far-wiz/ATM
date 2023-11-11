@@ -14,7 +14,14 @@ struct Card;
 struct DebitCard;
 struct Transaction;
 
-struct User {
+// [Interface] Require type to have an id
+struct IId {
+	virtual size_t GetId() const = 0;
+};
+
+class User : IId {
+public:
+	using DAO = UserDAO;
 	User() {
 		std::cout << "User default ctor()\n";
 	}
@@ -23,33 +30,45 @@ struct User {
 		std::cout << "User normal ctor()\n";
 	}
 	~User() {}
-	size_t id;
-	std::string name;
-	std::string surname;
-	std::string phoneNum;
-	std::vector<size_t> cards;
+
+	size_t GetId() const override {
+		return _id;
+	}
+	const std::string& GetName() const {
+		return _name;
+	}
+	const std::string& GetSurname() const {
+		return _surname;
+	}
+	const std::string& GetPhoneNumber() const {
+		return _surname;
+	}
+
+private:
+	std::string _name;
+	std::string _surname;
+	std::string _phoneNum;
+	size_t _id;
+	//std::vector<size_t> cards;
 };
 
 enum class CardType {
 	Debit, Credit
 };
 
-struct CVV {
-	uint8_t cvv[3];
-};
-
-struct Card {
+class Card : IId {
 public:
-	size_t GetId() const {
+	using DAO = CardDAO;
+	size_t GetId() const override {
 		return _id;
 	}
 	std::string GetCardNumber() const {
 		return _cardNumber;
 	}
-	size_t GetCurrentBalance() const {
+	double GetCurrentBalance() const {
 		return _currentBalance;
 	}
-	const CVV& GetCVV() const {
+	const std::string& GetCVV() const {
 		return _cvv;
 	}
 	const std::string& GetPinCode() const {
@@ -61,49 +80,86 @@ public:
 	CardType GetCardType() const {
 		return _cardType;
 	}
-	virtual size_t GetTransactionCommission() const = 0;
-	virtual size_t GetWidthdrawCommission() const = 0;
+	size_t GetOwnerId() const {
+		return _ownerId;
+	}
+	float GetTransactionCommission() const {
+		return _transactionCommission;
+	}
+	float GetWidthdrawCommission() const {
+		return _widthdrawCommission;
+	}
 	virtual ~Card() {}
 
 protected:
-	Card() {}
+	Card(const size_t id, const std::string& cardNumber, 
+		const std::string& cvv, const size_t ownerId, const double currentBalance,
+		const size_t expireDate, const CardType cardType, const float transactionCommission,
+		const float witdrawCommission, const std::string& pin) 
+		: _id(id), _cardNumber(cardNumber), _cvv(cvv), _ownerId(ownerId), _currentBalance(currentBalance),
+		_expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
+		_witdrawCommission(witdrawCommission), _pinCode(pin)
+	{}
 
 private:
-	size_t _id;
 	std::string _cardNumber;
-	size_t _currentBalance;
-	CVV _cvv;
+	std::string _cvv;
 	std::string _pinCode;
+	double _currentBalance;
+	float _transactionCommission;
+	float _widthdrawCommission;
 	size_t _expireDate;
+	size_t _ownerId;
+	size_t _id;
 	CardType _cardType;
 };
 
-struct DebitCard : Card {
-	virtual size_t GetTransactionCommission() const override { return 0; };
-	virtual size_t GetWidthdrawCommission() const override { return 0; };
+class DebitCard : public Card {
+public:
+	DebitCard(const size_t id, const std::string& cardNumber,
+		const std::string& cvv, const size_t ownerId, const double currentBalance,
+		const size_t expireDate, const float transactionCommission,
+		const float witdrawCommission, const size_t creditLimit, const std::string& pin)
+		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Debit, transactionCommission, witdrawCommission, pin)
+	{}
 };
 
-struct CreditCard : Card {
-	size_t creditLimit;
-	virtual size_t GetTransactionCommission() const override {};
-	virtual size_t GetWidthdrawCommission() const override;
+class CreditCard : public Card {
+public:
+	CreditCard(const size_t id, const std::string& cardNumber,
+		const std::string& cvv, const size_t ownerId, const double currentBalance,
+		const size_t expireDate, const float transactionCommission,
+		const float witdrawCommission, const size_t creditLimit, const std::string& pin)
+		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Credit, transactionCommission, witdrawCommission, pin),
+		_creditLimit(creditLimit)
+	{}
+
+	size_t GetCreditLimit() const {
+		return _creditLimit;
+	}
+private:
+	size_t _creditLimit;
 };
 
-struct Transaction {
+struct Transaction : IId {
+	size_t GetId() const override {
+		return _id;
+	}
 	const size_t from;
 	const size_t to;
 	const size_t amount;
 };
 
 
-class ATM {
+class ATM : IId {
 public:
 	ATM(Bank& bank, size_t id) : _bankRef(bank), id(id) {
 
 	}
 	~ATM() {}
-	// Id
-	size_t id;
+	size_t GetId() const override {
+		return _id;
+	}
 	// Bank id
 	size_t bankId;
 	// Amount of money left to withdraw
@@ -120,12 +176,12 @@ public:
 	void ChangeCVV(const CVV oldCvv);
 private:
 	Bank& _bankRef;
+	size_t _id;
 };
 
 class Bank {
 	// [Method] Process transaction
-	void ProcessTransaction(const Transaction& t)
-	{
+	void ProcessTransaction(const Transaction& t) {
 
 	}
 
@@ -133,20 +189,33 @@ class Bank {
 	ATM atm = ATM(*this, 0);
 
 	/* --- Users --- */
-	/*
-		User* getById(std::size_t id) const;
-		User* getByPhoneNum(std::string phoneNum) const;
-		User* getByCardNum(std::string cardNumber) const;
-		std::vector<std::size_t>* getUserCards(std::size_t userId);
+	/**
+	* Get R from DAO of T using key U
+	* @param param which will be passed to DAO of T
+	* @paraam
+	* @return requested object of type R as std::optional<R>, std::nullopt if db query failed
 	*/
+	template <class T, class U, class R = T>
+	std::optional<R> Get(const U& key, R* (T::DAO::* f)(const U&)) {
+		if (R* r = (T::DAO::getInstance().*f)(key)) {
+			R rr = std::move(*r);
+			delete r;
+			return rr;
+		}
+		return std::nullopt;
+	}
 
-	/*template <class T, class DAO>
-	std::optional<T> GetSomething(const size_t id)
-	{
-		auto r = DAO::getInstance().getById();
-	}*/
-
-	// [Method] Get user by id
+	// [Method] Get something by id
+	template <class T>
+	std::optional<T> GetById(const size_t id) {
+		if (T* r = T::DAO::getInstance().getById(id)) {
+			T rr = std::move(*r);
+			delete r;
+			return rr;
+		}
+		return std::nullopt;
+	}
+	
 	std::optional<User> GetUserById(const size_t userId)
 	{
 		if (User* r = UserDAO::getInstance().getById(userId)) {
@@ -202,16 +271,6 @@ class Bank {
 	void AddCardForUser(const Card& card) {
 		CardDAO::getInstance().saveCard();
 	}
-	/*
-
-    Card* getById(const QString& id) const;
-
-    std::size_t getBalance(const QString& id) const;
-
-    bool updateCard(const Card&) const;
-
-    void deleteById(const QString& id) const;
-	*/
 	
 
 	// [Method] Get transactions history by user
@@ -226,5 +285,4 @@ class Bank {
 	// [Method] Get card balance
 	size_t GetCardBalance(const size_t cardId);
 
-	// todo: add sql
 };
