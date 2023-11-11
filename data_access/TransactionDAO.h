@@ -15,13 +15,13 @@ class TransactionDAO {
 public:
     static TransactionDAO& getInstance();
 
-    QList<Transaction *> getCardTransactions(uint32_t cardId);
-    QList<Transaction*> getUserTransactions(uint32_t userId);
+    [[nodiscard]] QList<Transaction *> getCardTransactions(uint32_t cardId) const;
+    [[nodiscard]] QList<Transaction*> getUserTransactions(uint32_t userId) const;
 
 private:
     static void initialize();
 
-    Transaction* deserializeTransaction(const QSqlQuery& executedQuery) const;
+    [[nodiscard]] Transaction* deserializeTransaction(const QSqlQuery& executedQuery) const;
     QList<Transaction *> multipleCardsDeserialization(QSqlQuery &executedQuery) const;
 
     TransactionDAO() = default;

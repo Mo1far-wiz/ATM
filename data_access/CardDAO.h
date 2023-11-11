@@ -16,10 +16,10 @@ class CardDAO {
 public:
     static CardDAO& getInstance();
 
-    Card* getById(uint32_t id) const;
-    Card* getByCardNum(const QString& cardNum) const;
-    Card* getByUserId(uint32_t id) const;
-    QList<Card*> getAllUserCards(uint32_t id) const;
+    [[nodiscard]] Card* getById(uint32_t id) const;
+    [[nodiscard]] Card* getByCardNum(const QString& cardNum) const;
+    [[nodiscard]] Card* getByUserId(uint32_t id) const;
+    [[nodiscard]] QList<Card*> getAllUserCards(uint32_t id) const;
 
     void addCard(const Card& card) const;
 

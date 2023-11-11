@@ -20,8 +20,11 @@ CardDAO &CardDAO::getInstance() {
 
 void CardDAO::initialize() {
     static bool isInitialized = false;
-    if (isInitialized || !QSqlDatabase::database().isOpen()) {
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
         return;
+    } else if (isInitialized) {
+        qInfo() << "Database is already initialized.";
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Card' "
@@ -39,7 +42,7 @@ void CardDAO::initialize() {
                           "FOREIGN KEY(cardType_id) REFERENCES CardType(id), "
                           "FOREIGN KEY(owner)       REFERENCES User(id));");
 
-    qInfo() << "creation of the 'Card' table was successful: " << createQuery.isActive();
+    qInfo() << "Creation of the 'Card' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
 
@@ -54,7 +57,18 @@ Card *CardDAO::getById(uint32_t id) const {
     selectQuery.prepare("SELECT * FROM Card WHERE id = :id");
     selectQuery.bindValue(":id", id);
 
-    return deserializeCard(selectQuery);
+    if (selectQuery.exec()) {
+        if (selectQuery.next()) {
+            return deserializeCard(selectQuery);
+        } else {
+            qWarning() << "Card with " << selectQuery.boundValueName(0) << selectQuery.boundValue(0).toString()
+                       << "not found.";
+        }
+    } else {
+        qCritical() << "Error retrieving card:" << selectQuery.lastError().text()
+                    << "\n\t For query : " << selectQuery.lastQuery();
+    }
+    return nullptr;
 }
 
 Card *CardDAO::deserializeCard(QSqlQuery &executedQuery) const {
@@ -101,7 +115,7 @@ Card *CardDAO::getByCardNum(const QString &cardNum) const {
                        << "not found.";
         }
     } else {
-        qCritical() << "Error retrieving user:" << selectQuery.lastError().text()
+        qCritical() << "Error retrieving card:" << selectQuery.lastError().text()
                     << "\n\t For query : " << selectQuery.lastQuery();
     }
     return nullptr;
@@ -127,7 +141,7 @@ Card *CardDAO::getByUserId(uint32_t id) const {
                        << "not found.";
         }
     } else {
-        qCritical() << "Error retrieving user:" << selectQuery.lastError().text()
+        qCritical() << "Error retrieving card:" << selectQuery.lastError().text()
                     << "\n\t For query : " << selectQuery.lastQuery();
     }
     return nullptr;
@@ -135,6 +149,7 @@ Card *CardDAO::getByUserId(uint32_t id) const {
 
 QList<Card *> CardDAO::multipleCardsDeserialization(QSqlQuery &executedQuery) const {
     QList<Card *> cards;
+
     while (executedQuery.next()) {
         Card *card = deserializeCard(executedQuery);
         if (card) {
@@ -163,7 +178,7 @@ QList<Card *> CardDAO::getAllUserCards(uint32_t id) const {
     if (selectQuery.exec()) {
         return multipleCardsDeserialization(selectQuery);
     } else {
-        qCritical() << "Error retrieving user:" << selectQuery.lastError().text()
+        qCritical() << "Error retrieving cards:" << selectQuery.lastError().text()
                     << "\n\t For query : " << selectQuery.lastQuery();
     }
     return {};

@@ -16,10 +16,11 @@ public:
     static ATM_DAO& getInstance();
 
     uint32_t getAvailableMoney(uint32_t id = 0);
+
 private:
     static void initialize();
 
-    ATM* deserializeATM(const QSqlQuery& executedQuery) const;
+    [[nodiscard]] ATM* deserializeATM(const QSqlQuery& executedQuery) const;
 
     ATM_DAO() = default;
 };

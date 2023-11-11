@@ -3,6 +3,7 @@
 #include <utility>
 #include "../IId.h"
 #include "CardType.h"
+#include "data_access/CardDAO.h"
 
 class Card : IId {
 public:
@@ -35,7 +36,7 @@ public:
 		return _transactionCommission;
 	}
 	float GetWithdrawCommission() const {
-		return _widthdrawCommission;
+		return _withdrawCommission;
 	}
 	virtual ~Card() {}
 
@@ -45,21 +46,21 @@ public:
 
 protected:
 	Card(const size_t id, const std::string& cardNumber,
-		const std::string& cvv, const size_t ownerId, const double currentBalance,
-		const size_t expireDate, const CardType cardType, const float transactionCommission,
-		const float witdrawCommission, const std::string& pin)
+         const std::string& cvv, const size_t ownerId, const double currentBalance,
+         const size_t expireDate, const CardType cardType, const float transactionCommission,
+         const float withdrawCommission, const std::string& pin)
 		: _id(id), _cardNumber(cardNumber), _cvv(cvv), _ownerId(ownerId), _currentBalance(currentBalance),
-		_expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
-		_witdrawCommission(withdrawCommission), _pinCode(pin)
+          _expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
+          _withdrawCommission(withdrawCommission), _pinCode(pin)
 	{}
 
-private:
+protected:
 	std::string _cardNumber;
 	std::string _cvv;
 	std::string _pinCode;
 	double _currentBalance;
 	float _transactionCommission;
-	float _widthdrawCommission;
+	float _withdrawCommission;
 	size_t _expireDate;
 	size_t _ownerId;
 	const size_t _id;
