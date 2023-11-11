@@ -16,8 +16,11 @@ TransactionDAO &TransactionDAO::getInstance() {
 
 void TransactionDAO::initialize() {
     static bool isInitialized = false;
-    if (isInitialized || !QSqlDatabase::database().isOpen()) {
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
         return;
+    } else if (isInitialized) {
+        qInfo() << "Database is already initialized.";
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Transaction' "
@@ -29,7 +32,7 @@ void TransactionDAO::initialize() {
                           "FOREIGN KEY(toCardId) REFERENCES Card(id));");
 
 
-    qInfo() << "creation of the 'Transaction' table was successful: " << createQuery.isActive();
+    qInfo() << "Creation of the 'Transaction' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
 
@@ -52,7 +55,7 @@ QList<Transaction *> TransactionDAO::multipleCardsDeserialization(QSqlQuery &exe
         if (transaction) {
             transactions.append(transaction);
         } else {
-            qWarning() << "Transaction with " << executedQuery.boundValueName(0) << executedQuery.boundValue(0).toString()
+            qWarning() << "Transactions with " << executedQuery.boundValueName(0) << executedQuery.boundValue(0).toString()
                        << "not found.";
             break;
         }
@@ -61,7 +64,7 @@ QList<Transaction *> TransactionDAO::multipleCardsDeserialization(QSqlQuery &exe
     return transactions;
 }
 
-QList<Transaction *> TransactionDAO::getCardTransactions(uint32_t cardId) {
+QList<Transaction *> TransactionDAO::getCardTransactions(uint32_t cardId) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return {};
@@ -83,7 +86,7 @@ QList<Transaction *> TransactionDAO::getCardTransactions(uint32_t cardId) {
     return {};
 }
 
-QList<Transaction *> TransactionDAO::getUserTransactions(uint32_t userId) {
+QList<Transaction *> TransactionDAO::getUserTransactions(uint32_t userId) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return {};

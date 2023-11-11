@@ -19,8 +19,11 @@ UserDAO &UserDAO::getInstance() {
 
 void UserDAO::initialize() {
     static bool isInitialized = false;
-    if (isInitialized || !QSqlDatabase::database().isOpen()) {
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
         return;
+    } else if (isInitialized) {
+        qInfo() << "Database is already initialized.";
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'User' "
@@ -29,7 +32,7 @@ void UserDAO::initialize() {
                           "surname TEXT NOT NULL, "
                           "phoneNum VARCHAR(13) NOT NULL);");
 
-    qInfo() << "creation of the 'User' table was successful: " << createQuery.isActive();
+    qInfo() << "Creation of the 'User' table was successful: " << createQuery.isActive();
     isInitialized = true;
 }
 
@@ -49,9 +52,10 @@ void UserDAO::addUser(uint32_t id, const QString &name, const QString &surname, 
 
     // Execute the query
     if (insertQuery.exec()) {
-        qInfo() << "User added successfully.";
+        qInfo() << "User with ID" << id << "added successfully.";
     } else {
-        qCritical() << "Error adding user:" << insertQuery.lastError().text();
+        qCritical() << "Error adding user:" << insertQuery.lastError().text()
+                << "\n\t For query : " << insertQuery.lastQuery();
     }
 }
 
@@ -109,6 +113,7 @@ User *UserDAO::getByCardNum(const QString& cardNum) const {
         qCritical() << "Database is not open.";
         return nullptr;
     }
+
     if(Card* card = CardDAO::getInstance().getByCardNum(cardNum)) {
         // Prepare the SQL query
         QSqlQuery selectQuery;
@@ -121,7 +126,7 @@ User *UserDAO::getByCardNum(const QString& cardNum) const {
     return nullptr;
 }
 
-QList<Card *> UserDAO::getAllUserCards(uint32_t userId) {
+QList<Card *> UserDAO::getAllUserCards(uint32_t userId) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return {};
