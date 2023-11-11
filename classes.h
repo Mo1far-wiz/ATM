@@ -9,10 +9,10 @@
 
 class Bank;
 class ATM;
-struct User;
-struct Card;
-struct DebitCard;
-struct Transaction;
+class User;
+class Card;
+class DebitCard;
+class Transaction;
 
 // [Interface] Require type to have an id
 struct IId {
@@ -43,12 +43,15 @@ public:
 	const std::string& GetPhoneNumber() const {
 		return _surname;
 	}
+	std::string ToString() const {
+		return "[User]: Id: " + std::to_string(_id) + " Name: " + _name + " Surname: " + _surname + " phone: " + _phoneNum;
+	}
 
 private:
 	std::string _name;
 	std::string _surname;
 	std::string _phoneNum;
-	size_t _id;
+	const size_t _id;
 	//std::vector<size_t> cards;
 };
 
@@ -86,10 +89,14 @@ public:
 	float GetTransactionCommission() const {
 		return _transactionCommission;
 	}
-	float GetWidthdrawCommission() const {
+	float GetWithdrawCommission() const {
 		return _widthdrawCommission;
 	}
 	virtual ~Card() {}
+
+	virtual std::string ToString() const {
+		return "[Card]: Id: " + std::to_string(_id) + " Number: " + _cardNumber + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv;
+	}
 
 protected:
 	Card(const size_t id, const std::string& cardNumber, 
@@ -98,7 +105,7 @@ protected:
 		const float witdrawCommission, const std::string& pin) 
 		: _id(id), _cardNumber(cardNumber), _cvv(cvv), _ownerId(ownerId), _currentBalance(currentBalance),
 		_expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
-		_witdrawCommission(witdrawCommission), _pinCode(pin)
+		_witdrawCommission(withdrawCommission), _pinCode(pin)
 	{}
 
 private:
@@ -110,7 +117,7 @@ private:
 	float _widthdrawCommission;
 	size_t _expireDate;
 	size_t _ownerId;
-	size_t _id;
+	const size_t _id;
 	CardType _cardType;
 };
 
@@ -122,6 +129,10 @@ public:
 		const float witdrawCommission, const size_t creditLimit, const std::string& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Debit, transactionCommission, witdrawCommission, pin)
 	{}
+
+	virtual std::string ToString() const {
+		return "[DebitCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv;
+	}
 };
 
 class CreditCard : public Card {
@@ -137,35 +148,59 @@ public:
 	size_t GetCreditLimit() const {
 		return _creditLimit;
 	}
+	virtual std::string ToString() const override {
+		return "[CreditCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv + " creditLimit: " + _creditLimit;
+	}
 private:
 	size_t _creditLimit;
 };
 
-struct Transaction : IId {
+class Transaction : IId {
+public:
+	Transaction(const size_t id, const size_t from, const size_t to, const double amount)
+		: _id(id), _from(from), _to(to), _amount(amount)
+	{}
 	size_t GetId() const override {
 		return _id;
 	}
-	const size_t from;
-	const size_t to;
-	const size_t amount;
-};
+	size_t GetFrom() const {
+		return _from;
+	}
+	size_t GetTo() const {
+		return _to;
+	}
+	double GetAmount() const {
+		return _amount;
+	}
 
+	std::string ToString() const {
+		return "[Transaction]: Id: " + std::to_string(_id) + " From: " + std::to_string(_from) + " To: " + std::to_string(_to) + " Amount: " + std::to_string(_amount);
+	}
+private:
+	const size_t _id;
+	const size_t _from;
+	const size_t _to;
+	const double _amount;
+};
 
 class ATM : IId {
 public:
-	ATM(Bank& bank, size_t id) : _bankRef(bank), id(id) {
+	ATM(size_t id) : _bankRef(bank), id(id) {
 
 	}
 	~ATM() {}
 	size_t GetId() const override {
 		return _id;
 	}
-	// Bank id
-	size_t bankId;
-	// Amount of money left to withdraw
-	size_t moneyLeft;
-	// Currently inserted card
-	size_t currentCardId;
+	size_t GetBankId() const {
+		return _bankId;
+	}
+	size_t GetAvailableWithdraw() const {
+		return _moneyLeft;
+	}
+	size_t GetInsertedCardId() const {
+		return _insertedCardId;
+	}
 	// [Method] Insert & Verify card
 	void AcceptCard(const Card&);
 	// [Method] Create a transaction and make Bank process it
@@ -174,21 +209,17 @@ public:
 	size_t GetBalance();
 	// [Method] Change CVV
 	void ChangeCVV(const CVV oldCvv);
+	
 private:
-	Bank& _bankRef;
-	size_t _id;
-};
-
-class Bank {
-	// [Method] Process transaction
-	void ProcessTransaction(const Transaction& t) {
-
-	}
-
-	/* --- ATM --- */
-	ATM atm = ATM(*this, 0);
-
-	/* --- Users --- */
+	const size_t _id;
+	// Bank id
+	size_t _bankId;
+	// Amount of money left to withdraw
+	size_t _moneyLeft;
+	// Currently inserted card
+	size_t _insertedCardId;
+	
+	/* --- DAO interaction --- */
 	/**
 	* Get R from DAO of T using key U
 	* @param param which will be passed to DAO of T
@@ -215,7 +246,7 @@ class Bank {
 		}
 		return std::nullopt;
 	}
-	
+
 	std::optional<User> GetUserById(const size_t userId)
 	{
 		if (User* r = UserDAO::getInstance().getById(userId)) {
@@ -225,7 +256,7 @@ class Bank {
 		}
 		return std::nullopt;
 	}
-	
+
 	// [Method] Get user by phone number
 	std::optional<User> GetUserByPhoneNum(const std::string& phoneNum)
 	{
@@ -236,7 +267,7 @@ class Bank {
 		}
 		return std::nullopt;
 	}
-	
+
 	// [Method] Get user by card number
 	std::optional<User> GetUserByPhoneNum(const std::string& phoneNum)
 	{
@@ -257,7 +288,8 @@ class Bank {
 				if (Card* card = cardDao.getById(cardId)) {
 					userCards.emplace_back(std::move(*card));
 					delete card;
-				} else {
+				}
+				else {
 					return std::nullopt;
 				}
 			}
@@ -271,7 +303,7 @@ class Bank {
 	void AddCardForUser(const Card& card) {
 		CardDAO::getInstance().saveCard();
 	}
-	
+
 
 	// [Method] Get transactions history by user
 	std::vector<Transaction> GetTransactionsHistoryByUser(const size_t userId);
@@ -284,5 +316,4 @@ class Bank {
 
 	// [Method] Get card balance
 	size_t GetCardBalance(const size_t cardId);
-
 };
