@@ -118,7 +118,7 @@ User *UserDAO::getByCardNum(const QString& cardNum) const {
         // Prepare the SQL query
         QSqlQuery selectQuery;
         selectQuery.prepare("SELECT * FROM User WHERE id = :id");
-        selectQuery.bindValue(":id", (uint32_t)card->id);   // change to user id
+        selectQuery.bindValue(":id", card->GetOwnerId());
 
         return deserializeUser(selectQuery);
     }

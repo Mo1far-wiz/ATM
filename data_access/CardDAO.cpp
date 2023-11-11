@@ -88,9 +88,16 @@ Card *CardDAO::deserializeCard(QSqlQuery &executedQuery) const {
 
     Card *card = nullptr;
     if (static_cast<CardType>(cardType_id) == CardType::Credit) {
-        //card = new CreditCard(id, cardNumber.toStdString(), currentBalance, cvv.toStdString(), expireDate.day(), CardType::Credit);
-    } else if (static_cast<CardType>(cardType_id) == CardType::Debit) {
-        //card = new DebitCard(id, cardNumber.toStdString(), currentBalance, cvv.toStdString(), expireDate.day(), CardType::Debit);
+        card = new CreditCard(id, cardNumber.toStdString(), cvv.toStdString(),
+                              owner, currentBalance, expireDate.day(),
+                              transactionCommission,
+                              withdrawCommission, creditLimit, pin.toStdString());
+    }
+    else if (static_cast<CardType>(cardType_id) == CardType::Debit) {
+        card = new DebitCard(id, cardNumber.toStdString(), cvv.toStdString(),
+                             owner, currentBalance, expireDate.day(),
+                             transactionCommission,
+                             withdrawCommission, creditLimit, pin.toStdString());
     }
     qInfo() << "Card with ID" << id << "was found.";
     return card;
@@ -182,4 +189,39 @@ QList<Card *> CardDAO::getAllUserCards(uint32_t id) const {
                     << "\n\t For query : " << selectQuery.lastQuery();
     }
     return {};
+}
+
+void CardDAO::addCard(const int id, const QString &cardNumber, const QString &cvv, uint32_t owner, double currentBalance,
+                      const QDate &expireDate, int cardTypeId, float transactionCommission,
+                      float withdrawCommission, int creditLimit, const QString &pin) const {
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
+        return;
+    }
+
+    // Prepare the SQL query
+    QSqlQuery insertCardQuery;
+    insertCardQuery.prepare("INSERT INTO Card (id, cardNumber, cvv, owner, currentBalance, expireDate, "
+                            "cardType_id, transactionCommission, withdrawCommission, creditLimit, pin) "
+                            "VALUES (:id, :cardNumber, :cvv, :owner, :currentBalance, :expireDate, "
+                            ":cardTypeId, :transactionCommission, :withdrawCommission, :creditLimit, :pin)");
+    insertCardQuery.bindValue(":id", id);
+    insertCardQuery.bindValue(":cardNumber", cardNumber);
+    insertCardQuery.bindValue(":cvv", cvv);
+    insertCardQuery.bindValue(":owner", owner);
+    insertCardQuery.bindValue(":currentBalance", currentBalance);
+    insertCardQuery.bindValue(":expireDate", expireDate.toString(Qt::ISODate));
+    insertCardQuery.bindValue(":cardTypeId", cardTypeId);
+    insertCardQuery.bindValue(":transactionCommission", transactionCommission);
+    insertCardQuery.bindValue(":withdrawCommission", withdrawCommission);
+    insertCardQuery.bindValue(":creditLimit", creditLimit);
+    insertCardQuery.bindValue(":pin", pin);
+
+    // Execute the query
+    if (insertCardQuery.exec()) {
+        qInfo() << "Card with cardNumber" << cardNumber << "added successfully.";
+    } else {
+        qCritical() << "Error adding card:" << insertCardQuery.lastError().text()
+                    << "\n\t For query : " << insertCardQuery.lastQuery();
+    }
 }

@@ -3,10 +3,10 @@
 
 class DebitCard : public Card {
 public:
-	DebitCard(const size_t id, const std::string& cardNumber,
-              const std::string& cvv, const size_t ownerId, const double currentBalance,
-              const size_t expireDate, const float transactionCommission,
-              const float withdrawCommission, const size_t creditLimit, const std::string& pin)
+	DebitCard(const uint32_t id, const std::string& cardNumber,
+              const std::string& cvv, const uint32_t ownerId, const double currentBalance,
+              const uint32_t expireDate, const float transactionCommission,
+              const float withdrawCommission, const uint32_t creditLimit, const std::string& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Debit, transactionCommission, withdrawCommission, pin)
 	{}
 

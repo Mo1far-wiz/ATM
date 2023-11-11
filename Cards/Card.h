@@ -5,10 +5,12 @@
 #include "CardType.h"
 #include "data_access/CardDAO.h"
 
+class CardDAO;
+
 class Card : IId {
 public:
 	using DAO = CardDAO;
-	size_t GetId() const override {
+    uint32_t GetId() const override {
 		return _id;
 	}
 	std::string GetCardNumber() const {
@@ -23,13 +25,13 @@ public:
 	const std::string& GetPinCode() const {
 		return _pinCode;
 	}
-	size_t GetExpireDate() const {
+    uint32_t GetExpireDate() const {
 		return _expireDate;
 	}
 	CardType GetCardType() const {
 		return _cardType;
 	}
-	size_t GetOwnerId() const {
+    uint32_t GetOwnerId() const {
 		return _ownerId;
 	}
 	float GetTransactionCommission() const {
@@ -45,9 +47,9 @@ public:
 	}
 
 protected:
-	Card(const size_t id, const std::string& cardNumber,
-         const std::string& cvv, const size_t ownerId, const double currentBalance,
-         const size_t expireDate, const CardType cardType, const float transactionCommission,
+	Card(const uint32_t id, const std::string& cardNumber,
+         const std::string& cvv, const uint32_t ownerId, const double currentBalance,
+         const uint32_t expireDate, const CardType cardType, const float transactionCommission,
          const float withdrawCommission, const std::string& pin)
 		: _id(id), _cardNumber(cardNumber), _cvv(cvv), _ownerId(ownerId), _currentBalance(currentBalance),
           _expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
@@ -61,8 +63,8 @@ protected:
 	double _currentBalance;
 	float _transactionCommission;
 	float _withdrawCommission;
-	size_t _expireDate;
-	size_t _ownerId;
-	const size_t _id;
+	uint32_t _expireDate;
+    uint32_t _ownerId;
+	const uint32_t _id;
 	CardType _cardType;
 };

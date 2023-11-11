@@ -42,7 +42,7 @@ Transaction *TransactionDAO::deserializeTransaction(const QSqlQuery &executedQue
     uint32_t toCardId   = executedQuery.value("toCardId").toUInt();
     double amount       = executedQuery.value("amount").toUInt();
 
-    Transaction * transaction = nullptr;
+    Transaction * transaction = new Transaction(id, fromCardId, toCardId, amount);
 
     qInfo() << "Transaction with ID" << id << "was found.";
     return transaction;

@@ -4,12 +4,12 @@
 class Card;
 
 struct User {
-    User(const size_t id, const std::string name, const std::string surname, const std::string phoneNum)
+    User(const uint32_t id, const std::string name, const std::string surname, const std::string phoneNum)
             : id(id), name(name), surname(surname), phoneNum(phoneNum) {
 
     }
     ~User() {}
-    size_t id;
+    uint32_t id;
     std::string name;
     std::string surname;
     std::string phoneNum;

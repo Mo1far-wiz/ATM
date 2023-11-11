@@ -11,6 +11,8 @@
 
 #include "Cards/Card.h"
 
+class Card;
+
 class CardDAO {
 
 public:
@@ -21,8 +23,9 @@ public:
     [[nodiscard]] Card* getByUserId(uint32_t id) const;
     [[nodiscard]] QList<Card*> getAllUserCards(uint32_t id) const;
 
-    void addCard(const Card& card) const;
-
+    void addCard(const int id, const QString &cardNumber, const QString &cvv, uint32_t owner, double currentBalance,
+                          const QDate &expireDate, int cardTypeId, float transactionCommission,
+                          float withdrawCommission, int creditLimit, const QString &pin) const;
 private:
     static void initialize();
 

@@ -2,5 +2,5 @@
 
 // [Interface] Require type to have an id
 struct IId {
-	virtual size_t GetId() const = 0;
+	virtual uint32_t GetId() const = 0;
 };
