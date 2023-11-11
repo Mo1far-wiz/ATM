@@ -15,11 +15,11 @@ class UserDAO {
 public:
     static UserDAO& getInstance();
 
-    User* getById(uint32_t id) ;
+    User* getById(uint32_t id) const;
     User* getByPhoneNum(const QString& phoneNum) const;
     User* getByCardNum(const QString& cardNum) const;
+    QList<Card*> getAllUserCards(uint32_t userId);
 
-    std::vector<std::size_t> getUserCards(std::size_t userId);
     static void addUser(uint32_t id, const QString &name, const QString &surname, const QString &phoneNum);
 
 private:

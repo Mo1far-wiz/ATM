@@ -76,7 +76,7 @@ User *UserDAO::deserializeUser(QSqlQuery &selectQuery) const{
     }
     return nullptr;
 }
-User* UserDAO::getById(uint32_t id) {
+User* UserDAO::getById(uint32_t id) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return nullptr;
@@ -119,5 +119,14 @@ User *UserDAO::getByCardNum(const QString& cardNum) const {
     }
 
     return nullptr;
+}
+
+QList<Card *> UserDAO::getAllUserCards(uint32_t userId) {
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
+        return {};
+    }
+
+    return CardDAO::getInstance().getAllUserCards(userId);
 }
 
