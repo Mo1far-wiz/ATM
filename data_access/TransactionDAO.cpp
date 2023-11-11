@@ -99,7 +99,7 @@ QList<Transaction *> TransactionDAO::getUserTransactions(const uint32_t &userId)
                         "SELECT id FROM Card WHERE owner = :from)"
                         "OR"
                         "toCardId IN ("
-                        "SELECT id FROM Card WHERE owner = :to");
+                        "SELECT id FROM Card WHERE owner = :to);");
     selectQuery.bindValue(":from", userId);
     selectQuery.bindValue(":to", userId);
 
