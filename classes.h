@@ -64,8 +64,11 @@ public:
 	virtual size_t GetTransactionCommission() const = 0;
 	virtual size_t GetWidthdrawCommission() const = 0;
 	virtual ~Card() {}
+
 protected:
 	Card() {}
+
+private:
 	size_t _id;
 	std::string _cardNumber;
 	size_t _currentBalance;
@@ -200,7 +203,6 @@ class Bank {
 		CardDAO::getInstance().saveCard();
 	}
 	/*
-    void saveCard(Card&) const;
 
     Card* getById(const QString& id) const;
 
