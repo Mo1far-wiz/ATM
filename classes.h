@@ -51,7 +51,7 @@ private:
 	std::string _name;
 	std::string _surname;
 	std::string _phoneNum;
-	size_t _id;
+	const size_t _id;
 	//std::vector<size_t> cards;
 };
 
@@ -211,7 +211,7 @@ public:
 	void ChangeCVV(const CVV oldCvv);
 	
 private:
-	size_t _id;
+	const size_t _id;
 	// Bank id
 	size_t _bankId;
 	// Amount of money left to withdraw
