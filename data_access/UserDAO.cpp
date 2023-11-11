@@ -3,10 +3,11 @@
 //
 
 #include "UserDAO.h"
-#include "CardDAO.h"
+
 #include <QDebug>
 #include <QtSql>
 #include <QtTest/qtestcase.h>
+
 
 
 UserDAO &UserDAO::getInstance() {

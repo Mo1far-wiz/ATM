@@ -1,7 +1,8 @@
+#pragma once
 #include "Card.h"
 
 struct DebitCard : public Card {
-    DebitCard(size_t id, const std::string& cardNumber, size_t currentBalance, const CVV& cvv,
+    DebitCard(size_t id, const std::string& cardNumber, size_t currentBalance, std::string cvv,
               size_t expireDate, const CardType& cardType)
             : Card(id, cardNumber, currentBalance, cvv, expireDate, cardType) {}
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "Card.h"
 
 class CreditCard : public Card {
@@ -5,7 +6,7 @@ private:
     size_t creditLimit;
 
 public:
-    CreditCard(size_t id, const std::string& cardNumber, size_t currentBalance, const CVV& cvv,
+    CreditCard(size_t id, const std::string& cardNumber, size_t currentBalance, std::string cvv,
                size_t expireDate, const CardType& cardType, size_t creditLimit)
             : Card(id, cardNumber, currentBalance, cvv, expireDate, cardType), creditLimit(creditLimit) {}
 

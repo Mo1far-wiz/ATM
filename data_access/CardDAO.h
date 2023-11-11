@@ -8,6 +8,7 @@
 #include <iostream>
 #include <QtSql/QSqlQuery>
 #include <QtCore/QObject>
+
 #include "Cards/Card.h"
 
 class CardDAO {

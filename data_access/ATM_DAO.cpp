@@ -2,8 +2,9 @@
 // Created by Oleksandr on 05.11.2023.
 //
 
-#include <QSqlDatabase>
 #include "ATM_DAO.h"
+
+#include <QSqlDatabase>
 
 ATM_DAO &ATM_DAO::getInstance() {
     static ATM_DAO instance;

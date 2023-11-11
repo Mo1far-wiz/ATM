@@ -1,8 +1,9 @@
 //
 // Created by Oleksandr on 05.11.2023.
 //
-#include <QSqlDatabase>
 #include "TransactionDAO.h"
+
+#include <QSqlDatabase>
 
 TransactionDAO &TransactionDAO::getInstance() {
     static TransactionDAO instance;

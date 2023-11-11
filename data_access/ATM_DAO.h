@@ -8,6 +8,7 @@
 #include <iostream>
 #include <QtSql/QSqlQuery>
 #include <QtCore/QObject>
+
 #include "Bank/ATM.h"
 
 class ATM_DAO {
