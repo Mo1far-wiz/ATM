@@ -253,31 +253,32 @@ private:
 	 * By default, DAO return dynamically allocated ptr, so this handler deletes it so that user of Get doesn't have to
 	 */
 	template <class R, class U>
-	R DefaultGetHandler(U r) {
-		R rr = std::move(*r);
-		delete r;
-		return rr;
+	R DefaultGetHandler(U& r) {
+		if (r) {
+			R rr = std::move(*r);
+			delete r;
+			return rr;
+		}
+		throw 0;
 	}
 
 	/**
 	 * Get R from DAO using its getter method which has U as arg and DaoR as return type
-	 * DaoR must be a pointer or a type that can be implicitly casted to bool
+	 * By default, DaoR must be a pointer
 	 * @param key param which will be passed to method of DAO
 	 * @param getter pointer to method of DAO
-	 * @param handler function, which takes DaoR and returns R, also it can throw to make function Get return std::nullopt
+	 * @param handler function, which takes DaoR& and returns R, also it can throw to make function Get return std::nullopt
 	 * @return Requested object of type R as std::optional<R>, std::nullopt if db query failed, or handler has thrown something
 	 */
 	template <class DAO, class U, class DaoR, class R>
-	std::optional<R> Get(const U& key, DaoR (DAO::* getter)(const U&), R(*f)(DaoR) = DefaultGetHandler<R, DaoR>) {
-		if (DaoR r = (DAO::getInstance().*getter)(key)) {
-			try {
-				return f(r);
-			}
-			catch (...) {
-				return std::nullopt;
-			}
+	std::optional<R> Get(const U& key, DaoR(DAO::* getter)(const U&), R(*f)(DaoR&) = DefaultGetHandler<R, DaoR>) {
+		DaoR r = (DAO::getInstance().*getter)(key);
+		try {
+			return f(r);
 		}
-		return std::nullopt;
+		catch (...) {
+			return std::nullopt;
+		}
 	}
 
 	// [Method] Get something by id
