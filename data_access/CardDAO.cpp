@@ -9,6 +9,9 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
+#include "Cards/CreditCard.h"
+#include "Cards/DebitCard.h"
+
 CardDAO &CardDAO::getInstance() {
     static CardDAO instance;
     initialize();
@@ -232,7 +235,11 @@ void CardDAO::UpdateCard(const DebitCard& card) {
 }
 
 void CardDAO::UpdateCard(const Card *card, const uint32_t &creditLimit) {
-    if (!card || !card->GetId()) {
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
+        return;
+    }
+    if (!card) {
         qWarning() << "Invalid card object or card ID.";
         return;
     }
@@ -263,8 +270,10 @@ void CardDAO::UpdateCard(const Card *card, const uint32_t &creditLimit) {
     updateQuery.bindValue(":pin", card->GetPinCode());
     updateQuery.bindValue(":id", card->GetId());
 
+    qInfo() << "Card with ID" << card->GetId() << "successfully updated.";
+
     if (updateQuery.exec()) {
-        qDebug() << "Card with ID" << card->GetId() << "successfully updated.";
+        qInfo() << "Card with ID" << card->GetId() << "successfully updated.";
     } else {
         qCritical() << "Error updating card:" << updateQuery.lastError().text()
                     << "\n\t For query : " << updateQuery.lastQuery();

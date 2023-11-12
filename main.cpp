@@ -9,6 +9,8 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
+#include "Cards/DebitCard.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -39,7 +41,8 @@ int main(int argc, char *argv[])
 
         User* user = userDao.getById(0);
         Card* card1 = cardDao.getByUserId(0);
-        DebitCard* debit = static_cast<DebitCard*>(card1);
+        DebitCard* debit = dynamic_cast<DebitCard*>(card1);
+        cardDao.UpdateCard(*debit);
         std::cout << (user ? user->toString().toStdString() : "") << std::endl;
         std::cout << (card1 ? card1->ToString().toStdString() : "") << std::endl;
         QList<Card*> cards = cardDao.getAllUserCards(0);

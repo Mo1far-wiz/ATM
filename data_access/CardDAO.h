@@ -10,8 +10,6 @@
 #include <QtCore/QObject>
 
 #include "Cards/Card.h"
-#include "Cards/CreditCard.h"
-#include "Cards/DebitCard.h"
 
 class Card;
 class CreditCard;
@@ -38,6 +36,7 @@ private:
 
     Card* deserializeCard(const QSqlQuery &executedQuery) const;
     QList<Card*> multipleCardsDeserialization(QSqlQuery &executedQuery) const;
+
     void UpdateCard(const Card *card, const uint32_t& creditLimit = 0);
 
         CardDAO() = default;
