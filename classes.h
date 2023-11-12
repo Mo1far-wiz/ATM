@@ -67,7 +67,7 @@ public:
 	std::string GetCardNumber() const {
 		return _cardNumber;
 	}
-	double GetCurrentBalance() const {
+	double GetBalance() const {
 		return _currentBalance;
 	}
 	const std::string& GetCVV() const {
@@ -221,6 +221,16 @@ public:
 			throw 0;
 		});
 	}
+	void RemoveInsertedCard() {
+		if (_insertedCard) {
+			delete _insertedCard;
+		}
+	}
+
+	// Return true if withdraw was successfull
+	bool Withdraw(const double amount) {
+		return IsCardInserted() && (GetInsertedCard()->GetBalance() >= amount) && (_moneyLeft >= amount);
+	}
 
 	// [Method] Create a transaction and make Bank process it
 	void CreateTransaction(const Card& from, const Card& to, size_t amount);
@@ -230,11 +240,6 @@ public:
 	void ChangeCVV(const CVV oldCvv);
 	
 private:
-	void RemoveInsertedCard() {
-		if (_insertedCard) {
-			delete _insertedCard;
-		}
-	}
 	// Id of ATM
 	const uint32_t _id;
 	// Amount of money left to withdraw

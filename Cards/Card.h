@@ -16,7 +16,7 @@ public:
 	QString GetCardNumber() const {
 		return _cardNumber;
 	}
-	double GetCurrentBalance() const {
+	double GetBalance() const {
 		return _currentBalance;
 	}
 	const QString& GetCVV() const {
