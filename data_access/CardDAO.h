@@ -11,22 +11,27 @@
 
 #include "Cards/Card.h"
 
+class Card;
+
 class CardDAO {
 
 public:
     static CardDAO& getInstance();
 
-    [[nodiscard]] Card* getById(uint32_t id) const;
+    [[nodiscard]] Card* getById(const uint32_t &id) const;
     [[nodiscard]] Card* getByCardNum(const QString& cardNum) const;
-    [[nodiscard]] Card* getByUserId(uint32_t id) const;
-    [[nodiscard]] QList<Card*> getAllUserCards(uint32_t id) const;
+    [[nodiscard]] Card* getByUserId(const uint32_t &id) const;
+    [[nodiscard]] QList<Card*> getAllUserCards(const uint32_t &id) const;
 
-    void addCard(const Card& card) const;
+    void UpdateCard(const Card* card) const;
 
+    void addCard(const int id, const QString &cardNumber, const QString &cvv, uint32_t owner, double currentBalance,
+                          const QDate &expireDate, int cardTypeId, float transactionCommission,
+                          float withdrawCommission, int creditLimit, const QString &pin) const;
 private:
     static void initialize();
 
-    Card* deserializeCard(QSqlQuery &executedQuery) const;
+    Card* deserializeCard(const QSqlQuery &executedQuery) const;
     QList<Card*> multipleCardsDeserialization(QSqlQuery &executedQuery) const;
 
     CardDAO() = default;

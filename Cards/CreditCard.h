@@ -3,19 +3,19 @@
 
 class CreditCard : public Card {
 public:
-	CreditCard(const size_t id, const std::string& cardNumber,
-               const std::string& cvv, const size_t ownerId, const double currentBalance,
-               const size_t expireDate, const float transactionCommission,
-               const float withdrawCommission, const size_t creditLimit, const std::string& pin)
+	CreditCard(const uint32_t id, const QString& cardNumber,
+               const QString& cvv, const uint32_t ownerId, const double currentBalance,
+               const uint32_t expireDate, const float transactionCommission,
+               const float withdrawCommission, const uint32_t creditLimit, const QString& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Credit, transactionCommission, withdrawCommission, pin),
 		_creditLimit(creditLimit)
 	{}
 
-	size_t GetCreditLimit() const {
+	uint32_t GetCreditLimit() const {
 		return _creditLimit;
 	}
-	virtual std::string ToString() const override {
-		return "[CreditCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv + " creditLimit: " + std::to_string(_creditLimit);
+	virtual QString ToString() const override {
+		return ("[CreditCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString() + " creditLimit: " + std::to_string(_creditLimit)).c_str();
 	}
 private:
 	size_t _creditLimit;

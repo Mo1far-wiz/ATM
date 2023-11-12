@@ -1,35 +1,39 @@
 #include <iostream>
 #include <vector>
+#include <QString>
+#include <QtCore/QObject>
+
+#include "Cards/Card.h"
 
 class Card;
 
 struct User {
-    User(const size_t id, const std::string name, const std::string surname, const std::string phoneNum)
+    User(const uint32_t id, const QString& name, const QString& surname, const QString& phoneNum)
             : id(id), name(name), surname(surname), phoneNum(phoneNum) {
 
     }
     ~User() {}
-    size_t id;
-    std::string name;
-    std::string surname;
-    std::string phoneNum;
-    std::vector<size_t> cards;
+    uint32_t id;
+    QString name;
+    QString surname;
+    QString phoneNum;
+    QList<Card*> cards;
 
-    std::string toString() const {
+    QString toString() const {
         std::string result;
 
         result += "ID: " + std::to_string(id) + "\n";
-        result += "Name: " + name + "\n";
-        result += "Surname: " + surname + "\n";
-        result += "Phone Number: " + phoneNum + "\n";
+        result += "Name: " + name.toStdString() + "\n";
+        result += "Surname: " + surname.toStdString() + "\n";
+        result += "Phone Number: " + phoneNum.toStdString() + "\n";
         result += "Cards: ";
 
-        for (const size_t& card : cards) {
-            result += std::to_string(card) + " ";
+        for (auto card: cards) {
+            result += card->ToString().toStdString() + " ";
         }
         result += "\n";
 
-        return result;
+        return result.c_str();
     }
 
 

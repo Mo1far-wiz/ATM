@@ -42,7 +42,7 @@ Transaction *TransactionDAO::deserializeTransaction(const QSqlQuery &executedQue
     uint32_t toCardId   = executedQuery.value("toCardId").toUInt();
     double amount       = executedQuery.value("amount").toUInt();
 
-    Transaction * transaction = nullptr;
+    Transaction * transaction = new Transaction(id, fromCardId, toCardId, amount);
 
     qInfo() << "Transaction with ID" << id << "was found.";
     return transaction;
@@ -64,7 +64,7 @@ QList<Transaction *> TransactionDAO::multipleCardsDeserialization(QSqlQuery &exe
     return transactions;
 }
 
-QList<Transaction *> TransactionDAO::getCardTransactions(uint32_t cardId) const{
+QList<Transaction *> TransactionDAO::getCardTransactions(const uint32_t &cardId) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return {};
@@ -86,7 +86,7 @@ QList<Transaction *> TransactionDAO::getCardTransactions(uint32_t cardId) const{
     return {};
 }
 
-QList<Transaction *> TransactionDAO::getUserTransactions(uint32_t userId) const{
+QList<Transaction *> TransactionDAO::getUserTransactions(const uint32_t &userId) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return {};
@@ -99,7 +99,7 @@ QList<Transaction *> TransactionDAO::getUserTransactions(uint32_t userId) const{
                         "SELECT id FROM Card WHERE owner = :from)"
                         "OR"
                         "toCardId IN ("
-                        "SELECT id FROM Card WHERE owner = :to");
+                        "SELECT id FROM Card WHERE owner = :to);");
     selectQuery.bindValue(":from", userId);
     selectQuery.bindValue(":to", userId);
 
@@ -110,4 +110,28 @@ QList<Transaction *> TransactionDAO::getUserTransactions(uint32_t userId) const{
                     << "\n\t For query : " << selectQuery.lastQuery();
     }
     return {};
+}
+
+void TransactionDAO::addTransaction(uint32_t id, uint32_t fromCardId, uint32_t toCardId, double amount) const{
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
+        return;
+    }
+
+    // Prepare the SQL query
+    QSqlQuery insertTransactionQuery;
+    insertTransactionQuery.prepare("INSERT INTO Transaction (id, fromCardId, toCardId, amount) "
+                                   "VALUES (:id, :fromCardId, :toCardId, :amount)");
+    insertTransactionQuery.bindValue(":id", id);
+    insertTransactionQuery.bindValue(":fromCardId", fromCardId);
+    insertTransactionQuery.bindValue(":toCardId", toCardId);
+    insertTransactionQuery.bindValue(":amount", amount);
+
+    // Execute the query
+    if (insertTransactionQuery.exec()) {
+        qInfo() << "Transaction with ID " << id << " from Card ID " << fromCardId << " to Card ID " << toCardId << " added successfully.";
+    } else {
+        qCritical() << "Error adding transaction:" << insertTransactionQuery.lastError().text()
+                    << "\n\t For query : " << insertTransactionQuery.lastQuery();
+    }
 }
