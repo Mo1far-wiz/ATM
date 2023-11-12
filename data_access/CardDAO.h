@@ -10,6 +10,8 @@
 #include <QtCore/QObject>
 
 #include "Cards/Card.h"
+#include "Cards/CreditCard.h"
+#include "Cards/DebitCard.h"
 
 class Card;
 
@@ -23,7 +25,9 @@ public:
     [[nodiscard]] Card* getByUserId(const uint32_t &id) const;
     [[nodiscard]] QList<Card*> getAllUserCards(const uint32_t &id) const;
 
-    void UpdateCard(const Card* card);
+    void UpdateCard(const DebitCard& card);
+    void UpdateCard(const CreditCard& card);
+
     void addCard(const int id, const QString &cardNumber, const QString &cvv, uint32_t owner, double currentBalance,
                           const QDate &expireDate, int cardTypeId, float transactionCommission,
                           float withdrawCommission, int creditLimit, const QString &pin) const;
@@ -32,8 +36,9 @@ private:
 
     Card* deserializeCard(const QSqlQuery &executedQuery) const;
     QList<Card*> multipleCardsDeserialization(QSqlQuery &executedQuery) const;
+    void CardDAO::UpdateCard(const Card *card, const uint32_t& creditLimit = 0);
 
-    CardDAO() = default;
+        CardDAO() = default;
 };
 
 

@@ -226,7 +226,15 @@ void CardDAO::addCard(const int id, const QString &cardNumber, const QString &cv
     }
 }
 
-void CardDAO::UpdateCard(const Card *card) {
+void CardDAO::UpdateCard(const CreditCard& card) {
+    UpdateCard(&card, card.GetCreditLimit());
+}
+
+void CardDAO::UpdateCard(const DebitCard& card) {
+    UpdateCard(&card);
+}
+
+void CardDAO::UpdateCard(const Card *card, const uint32_t &creditLimit) {
     if (!card || !card->GetId()) {
         qWarning() << "Invalid card object or card ID.";
         return;
@@ -254,7 +262,7 @@ void CardDAO::UpdateCard(const Card *card) {
     updateQuery.bindValue(":cardType_id", static_cast<int>(card->GetCardType()));
     updateQuery.bindValue(":transactionCommission", card->GetTransactionCommission());
     updateQuery.bindValue(":withdrawCommission", card->GetWithdrawCommission());
-    updateQuery.bindValue(":creditLimit", 0);
+    updateQuery.bindValue(":creditLimit", creditLimit);
     updateQuery.bindValue(":pin", card->GetPinCode());
     updateQuery.bindValue(":id", card->GetId());
 
