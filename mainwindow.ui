@@ -72,7 +72,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="EnterPinScreen" name="enterPinScreen">
            <property name="sizePolicy">
@@ -82,6 +82,7 @@
             </sizepolicy>
            </property>
           </widget>
+          <widget class="MainScreen" name="mainScreen"/>
           <widget class="DefaultScreen" name="defaultScreen"/>
          </widget>
         </item>
@@ -235,6 +236,12 @@
    <class>DefaultScreen</class>
    <extends>QWidget</extends>
    <header>UI/defaultscreen.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MainScreen</class>
+   <extends>QWidget</extends>
+   <header>UI/mainscreen.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

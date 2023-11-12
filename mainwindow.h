@@ -24,7 +24,7 @@ private slots:
     void buttonClick(int id);
 
 private:
-    void onSwitchScreenEvent(SwitchScreenEvent* event);
+    void onSwitchScreenEvent(SwitchScreenEvent* event, QObject* initObject = nullptr);
 
     Ui::MainWindow *ui;
 

@@ -64,7 +64,7 @@ void MainWindow::buttonClick(int id)
     QCoreApplication::sendEvent(ui->screenStack->currentWidget(), &event);
 }
 
-void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event)
+void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event, QObject* initObject /*= nullptr*/)
 {
     ATMScreen* screen;
     switch (event->getScreenType()) // init in each case probably
@@ -75,8 +75,11 @@ void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event)
         case ScreenType::EnterPin:
             screen = ui->enterPinScreen;
             break;
+        case ScreenType::Main:
+            screen = ui->mainScreen;
+            break;
     }
-    screen->init();
+    screen->init(initObject);
     ui->screenStack->setCurrentWidget(screen);
     ui->screenStack->update();
 }

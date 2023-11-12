@@ -26,6 +26,6 @@ void ATMScreen::sendSwitchScreen(ScreenType type) const {
     QCoreApplication::sendEvent(window(), &event);
 }
 
-void ATMScreen::init() {
+void ATMScreen::init(QObject* initObject) {
     qDebug("%s init", qUtf8Printable(objectName()));
 }

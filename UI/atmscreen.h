@@ -15,7 +15,7 @@ public:
 
     virtual bool event(QEvent* event) override;
 
-    virtual void init();
+    virtual void init(QObject* initObject);
 
 protected:
     virtual void onATMButtonPressed(ATMButtonPressedEvent* event);

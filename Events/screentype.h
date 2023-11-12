@@ -5,6 +5,7 @@ enum class ScreenType : int
 {
     Default,
     EnterPin,
+    Main,
 };
 
 #endif //ATM_SCREENTYPE_H

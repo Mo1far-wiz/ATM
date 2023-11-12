@@ -7,8 +7,6 @@ EnterPinScreen::EnterPinScreen(QWidget *parent)
     , ui(new Ui::EnterPinScreen)
 {
     ui->setupUi(this);
-    currentLine = ui->cardNumber;
-    currentLine->setFocus();
     defaultText = ui->label_2->text();
 }
 
@@ -56,6 +54,7 @@ void EnterPinScreen::onATMButtonPressed(ATMButtonPressedEvent *event)
         default:
             if (currentLine && event->isNumber())
             {
+                currentLine->setCursorPosition(static_cast<int>(currentLine->text().length()));
                 currentLine->insert(QString::number(static_cast<int>(id)));
                 break;
             }
@@ -66,13 +65,16 @@ bool EnterPinScreen::tryLogin() const {
     QString num = ui->cardNumber->text();
     QString pin = ui->cardPin->text();
     qDebug("Login attempt. Card %s, PIN %s", qUtf8Printable(num), qUtf8Printable(pin));
+    sendSwitchScreen(ScreenType::Main);
     return false;
 }
 
-void EnterPinScreen::init() {
-    ATMScreen::init();
+void EnterPinScreen::init(QObject* initObject) {
+    ATMScreen::init(initObject);
 
     ui->cardNumber->clear();
     ui->cardPin->clear();
-    ui->label_2->setText("Use L3 & L4 to select input field");
+    ui->label_2->setText(defaultText);
+    currentLine = ui->cardNumber;
+    currentLine->setFocus();
 }
