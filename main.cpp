@@ -36,14 +36,14 @@ int main(int argc, char *argv[])
         cardDao.addCard(1, "1983", "111", 0, 14.88,
                         QDate::currentDate(), 1, 0.1,
                         0.3, 0,"123");
-        
+
         User* user = userDao.getById(0);
         Card* card1 = cardDao.getByUserId(0);
-        std::cout << (user ? user->toString() : "") << std::endl;
-        std::cout << (card1 ? card1->ToString() : "") << std::endl;
+        std::cout << (user ? user->toString().toStdString() : "") << std::endl;
+        std::cout << (card1 ? card1->ToString().toStdString() : "") << std::endl;
         QList<Card*> cards = cardDao.getAllUserCards(0);
         std::for_each(cards.begin(), cards.end(), [](Card* card){
-            std::cout << card->ToString() << std::endl;
+            std::cout << card->ToString().toStdString() << std::endl;
         });
     }
 

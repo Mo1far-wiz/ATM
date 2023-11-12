@@ -15,7 +15,7 @@ class TransactionDAO {
 public:
     static TransactionDAO& getInstance();
 
-    [[nodiscard]] QList<Transaction *> getCardTransactions(const uint32_t &cardId) const;
+    [[nodiscard]] QList<Transaction*> getCardTransactions(const uint32_t &cardId) const;
     [[nodiscard]] QList<Transaction*> getUserTransactions(const uint32_t &userId) const;
 
     void addTransaction(uint32_t id, uint32_t fromCardId, uint32_t toCardId, double amount) const;

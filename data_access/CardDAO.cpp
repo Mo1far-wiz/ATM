@@ -88,16 +88,16 @@ Card *CardDAO::deserializeCard(const QSqlQuery &executedQuery) const {
 
     Card *card = nullptr;
     if (static_cast<CardType>(cardType_id) == CardType::Credit) {
-        card = new CreditCard(id, cardNumber.toStdString(), cvv.toStdString(),
+        card = new CreditCard(id, cardNumber, cvv,
                               owner, currentBalance, expireDate.day(),
                               transactionCommission,
-                              withdrawCommission, creditLimit, pin.toStdString());
+                              withdrawCommission, creditLimit, pin);
     }
     else if (static_cast<CardType>(cardType_id) == CardType::Debit) {
-        card = new DebitCard(id, cardNumber.toStdString(), cvv.toStdString(),
+        card = new DebitCard(id, cardNumber, cvv,
                              owner, currentBalance, expireDate.day(),
                              transactionCommission,
-                             withdrawCommission, creditLimit, pin.toStdString());
+                             withdrawCommission, creditLimit, pin);
     }
     qInfo() << "Card with ID" << id << "was found.";
     return card;

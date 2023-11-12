@@ -68,7 +68,7 @@ User *UserDAO::deserializeUser(QSqlQuery &selectQuery) const{
             QString surname     = selectQuery.value("surname").toString();
             QString phoneNum    = selectQuery.value("phoneNum").toString();
 
-            User* user = new User(id, name.toStdString(), surname.toStdString(), phoneNum.toStdString());
+            User* user = new User(id, name, surname, phoneNum);
             qInfo() << "User with ID" << id << "was found.";
             return user;
         } else {

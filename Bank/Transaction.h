@@ -1,4 +1,6 @@
 #include <iostream>
+#include <QString>
+#include "IId.h"
 
 class Transaction : IId {
 public:
@@ -18,8 +20,8 @@ public:
         return _amount;
     }
 
-    std::string ToString() const {
-        return "[Transaction]: Id: " + std::to_string(_id) + " From: " + std::to_string(_from) + " To: " + std::to_string(_to) + " Amount: " + std::to_string(_amount);
+    QString ToString() const {
+        return ("[Transaction]: Id: " + std::to_string(_id) + " From: " + std::to_string(_from) + " To: " + std::to_string(_to) + " Amount: " + std::to_string(_amount)).c_str();
     }
 private:
     const uint32_t _id;

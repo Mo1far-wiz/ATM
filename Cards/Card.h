@@ -13,16 +13,16 @@ public:
     uint32_t GetId() const override {
 		return _id;
 	}
-	std::string GetCardNumber() const {
+	QString GetCardNumber() const {
 		return _cardNumber;
 	}
 	double GetCurrentBalance() const {
 		return _currentBalance;
 	}
-	const std::string& GetCVV() const {
+	const QString& GetCVV() const {
 		return _cvv;
 	}
-	const std::string& GetPinCode() const {
+	const QString& GetPinCode() const {
 		return _pinCode;
 	}
     uint32_t GetExpireDate() const {
@@ -42,24 +42,24 @@ public:
 	}
 	virtual ~Card() {}
 
-	virtual std::string ToString() const {
-		return "[Card]: Id: " + std::to_string(_id) + " Number: " + _cardNumber + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv;
+	virtual QString ToString() const {
+		return ("[Card]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString()).c_str();
 	}
 
 protected:
-	Card(const uint32_t id, const std::string& cardNumber,
-         const std::string& cvv, const uint32_t ownerId, const double currentBalance,
+	Card(const uint32_t id, const QString& cardNumber,
+         const QString& cvv, const uint32_t ownerId, const double currentBalance,
          const uint32_t expireDate, const CardType cardType, const float transactionCommission,
-         const float withdrawCommission, const std::string& pin)
+         const float withdrawCommission, const QString& pin)
 		: _id(id), _cardNumber(cardNumber), _cvv(cvv), _ownerId(ownerId), _currentBalance(currentBalance),
           _expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
           _withdrawCommission(withdrawCommission), _pinCode(pin)
 	{}
 
 protected:
-	std::string _cardNumber;
-	std::string _cvv;
-	std::string _pinCode;
+	QString _cardNumber;
+    QString _cvv;
+    QString _pinCode;
 	double _currentBalance;
 	float _transactionCommission;
 	float _withdrawCommission;
