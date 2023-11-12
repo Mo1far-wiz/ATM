@@ -9,9 +9,6 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
-#include "Cards/CreditCard.h"
-#include "Cards/DebitCard.h"
-
 CardDAO &CardDAO::getInstance() {
     static CardDAO instance;
     initialize();
@@ -225,52 +222,52 @@ void CardDAO::addCard(const int id, const QString &cardNumber, const QString &cv
                     << "\n\t For query : " << insertCardQuery.lastQuery();
     }
 }
-//
-//void CardDAO::UpdateCard(const CreditCard& card) {
-//    UpdateCard(&card, card.GetCreditLimit());
-//}
-//
-//void CardDAO::UpdateCard(const DebitCard& card) {
-//    UpdateCard(&card);
-//}
-//
-//void CardDAO::UpdateCard(const Card *card, const uint32_t &creditLimit) {
-//    if (!card || !card->GetId()) {
-//        qWarning() << "Invalid card object or card ID.";
-//        return;
-//    }
-//
-//    QSqlQuery updateQuery;
-//    updateQuery.prepare("UPDATE Card SET "
-//                        "cardNumber = :cardNumber, "
-//                        "cvv = :cvv, "
-//                        "owner = :owner, "
-//                        "currentBalance = :currentBalance, "
-//                        "expireDate = :expireDate, "
-//                        "cardType_id = :cardType_id, "
-//                        "transactionCommission = :transactionCommission, "
-//                        "withdrawCommission = :withdrawCommission, "
-//                        "creditLimit = :creditLimit, "
-//                        "pin = :pin "
-//                        "WHERE id = :id");
-//
-//    updateQuery.bindValue(":cardNumber", card->GetCardNumber());
-//    updateQuery.bindValue(":cvv", card->GetCVV());
-//    updateQuery.bindValue(":owner", card->GetOwnerId());
-//    updateQuery.bindValue(":currentBalance", card->GetCurrentBalance());
-//    updateQuery.bindValue(":expireDate", card->GetExpireDate());
-//    updateQuery.bindValue(":cardType_id", static_cast<int>(card->GetCardType()));
-//    updateQuery.bindValue(":transactionCommission", card->GetTransactionCommission());
-//    updateQuery.bindValue(":withdrawCommission", card->GetWithdrawCommission());
-//    updateQuery.bindValue(":creditLimit", creditLimit);
-//    updateQuery.bindValue(":pin", card->GetPinCode());
-//    updateQuery.bindValue(":id", card->GetId());
-//
-//    if (updateQuery.exec()) {
-//        qDebug() << "Card with ID" << card->GetId() << "successfully updated.";
-//    } else {
-//        qCritical() << "Error updating card:" << updateQuery.lastError().text()
-//                    << "\n\t For query : " << updateQuery.lastQuery();
-//    }
-//}
-//
+
+void CardDAO::UpdateCard(const CreditCard& card) {
+    UpdateCard(&card, card.GetCreditLimit());
+}
+
+void CardDAO::UpdateCard(const DebitCard& card) {
+    UpdateCard(&card);
+}
+
+void CardDAO::UpdateCard(const Card *card, const uint32_t &creditLimit) {
+    if (!card || !card->GetId()) {
+        qWarning() << "Invalid card object or card ID.";
+        return;
+    }
+
+    QSqlQuery updateQuery;
+    updateQuery.prepare("UPDATE Card SET "
+                        "cardNumber = :cardNumber, "
+                        "cvv = :cvv, "
+                        "owner = :owner, "
+                        "currentBalance = :currentBalance, "
+                        "expireDate = :expireDate, "
+                        "cardType_id = :cardType_id, "
+                        "transactionCommission = :transactionCommission, "
+                        "withdrawCommission = :withdrawCommission, "
+                        "creditLimit = :creditLimit, "
+                        "pin = :pin "
+                        "WHERE id = :id");
+
+    updateQuery.bindValue(":cardNumber", card->GetCardNumber());
+    updateQuery.bindValue(":cvv", card->GetCVV());
+    updateQuery.bindValue(":owner", card->GetOwnerId());
+    updateQuery.bindValue(":currentBalance", card->GetCurrentBalance());
+    updateQuery.bindValue(":expireDate", card->GetExpireDate());
+    updateQuery.bindValue(":cardType_id", static_cast<int>(card->GetCardType()));
+    updateQuery.bindValue(":transactionCommission", card->GetTransactionCommission());
+    updateQuery.bindValue(":withdrawCommission", card->GetWithdrawCommission());
+    updateQuery.bindValue(":creditLimit", creditLimit);
+    updateQuery.bindValue(":pin", card->GetPinCode());
+    updateQuery.bindValue(":id", card->GetId());
+
+    if (updateQuery.exec()) {
+        qDebug() << "Card with ID" << card->GetId() << "successfully updated.";
+    } else {
+        qCritical() << "Error updating card:" << updateQuery.lastError().text()
+                    << "\n\t For query : " << updateQuery.lastQuery();
+    }
+}
+
