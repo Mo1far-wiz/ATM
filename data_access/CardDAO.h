@@ -23,8 +23,7 @@ public:
     [[nodiscard]] Card* getByUserId(const uint32_t &id) const;
     [[nodiscard]] QList<Card*> getAllUserCards(const uint32_t &id) const;
 
-    void UpdateCard(const Card* card) const;
-
+    void UpdateCard(const Card* card);
     void addCard(const int id, const QString &cardNumber, const QString &cvv, uint32_t owner, double currentBalance,
                           const QDate &expireDate, int cardTypeId, float transactionCommission,
                           float withdrawCommission, int creditLimit, const QString &pin) const;
