@@ -18,7 +18,7 @@ public:
     uint32_t getAvailableMoney(const uint32_t &id = 0);
     [[nodiscard]] ATM* getAtmById(const uint32_t &id = 0) const;
 
-    void UpdateATM(const ATM* atm) const;
+    void UpdateATM(const ATM& atm) const;
 
 private:
     static void initialize();

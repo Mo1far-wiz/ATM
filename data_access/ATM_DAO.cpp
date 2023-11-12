@@ -94,3 +94,29 @@ ATM *ATM_DAO::getAtmById(const uint32_t &id) const{
     }
     return nullptr;
 }
+
+//void ATM_DAO::UpdateATM(const ATM &atm) const {
+//    if (!QSqlDatabase::database().isOpen()) {
+//        qCritical() << "Database is not open.";
+//        return;
+//    }
+//
+//    QSqlQuery updateQuery;
+//    updateQuery.prepare("UPDATE ATM SET "
+//                        "bankId = :bankId, "
+//                        "moneyLeft = :moneyLeft, "
+//                        "currentCardId = :currentCardId "
+//                        "WHERE id = :id");
+//
+//    updateQuery.bindValue(":bankId", atm.getBankId());
+//    updateQuery.bindValue(":moneyLeft", atm.getMoneyLeft());
+//    updateQuery.bindValue(":currentCardId", atm.getCurrentCardId());
+//    updateQuery.bindValue(":id", atm.getId());
+//
+//    if (updateQuery.exec()) {
+//        qDebug() << "ATM with ID" << atm.getId() << "successfully updated.";
+//    } else {
+//        qCritical() << "Error updating ATM:" << updateQuery.lastError().text()
+//                    << "\n\t For query : " << updateQuery.lastQuery();
+//    }
+//}
