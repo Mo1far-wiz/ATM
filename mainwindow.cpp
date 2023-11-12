@@ -2,11 +2,11 @@
 #include <QSignalMapper>
 #include "Events/atmbuttonpressedevent.h"
 #include "./ui_mainwindow.h"
+#include "UI/enterpinscreen.h"
 
 #define BIND_BUTTON(button) \
     connect(ui->button, SIGNAL(clicked()), signalMapper, SLOT(map())); \
     signalMapper->setMapping(ui->button, static_cast<int>(ATMButtonId::button))
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -48,6 +48,8 @@ MainWindow::~MainWindow()
 void MainWindow::buttonClick(int id)
 {
     ATMButtonPressedEvent event(static_cast<ATMButtonId>(id));
-    QCoreApplication::sendEvent(ui->bankScreen, &event);
+    QCoreApplication::sendEvent(ui->bankScreen->currentWidget(), &event);
+    ui->bankScreen->setCurrentWidget(ui->dscreen);
+    ui->bankScreen->update();
 }
 
