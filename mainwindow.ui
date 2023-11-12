@@ -31,6 +31,19 @@
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QPushButton" name="l_1">
             <property name="text">
              <string>L1</string>
@@ -61,7 +74,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QStackedWidget" name="bankScreen">
+         <widget class="QStackedWidget" name="screenStack">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -71,7 +84,7 @@
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <widget class="EnterPinScreen" name="escreen">
+          <widget class="EnterPinScreen" name="enterPinScreen">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -79,7 +92,7 @@
             </sizepolicy>
            </property>
           </widget>
-          <widget class="DefaultScreen" name="dscreen"/>
+          <widget class="DefaultScreen" name="defaultScreen"/>
          </widget>
         </item>
         <item>
@@ -87,6 +100,19 @@
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item>
            <widget class="QPushButton" name="r_1">
             <property name="text">

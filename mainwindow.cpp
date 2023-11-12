@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QSignalMapper>
 #include "Events/atmbuttonpressedevent.h"
+#include "Events/switchscreenevent.h"
 #include "./ui_mainwindow.h"
 #include "UI/enterpinscreen.h"
 
@@ -37,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     BIND_BUTTON(r_4);
 
     connect(signalMapper, SIGNAL(mappedInt(int)), this, SLOT(buttonClick(int)));
+
+    ui->screenStack->setCurrentWidget(ui->defaultScreen);
 }
 
 MainWindow::~MainWindow()
@@ -45,11 +48,35 @@ MainWindow::~MainWindow()
     delete signalMapper;
 }
 
+bool MainWindow::event(QEvent *event) {
+    if (event->type() == SwitchScreenEvent::SwitchScreen)
+    {
+        onSwitchScreenEvent(static_cast<SwitchScreenEvent*>(event));
+        return true;
+    }
+
+    return QMainWindow::event(event);
+}
+
 void MainWindow::buttonClick(int id)
 {
     ATMButtonPressedEvent event(static_cast<ATMButtonId>(id));
-    QCoreApplication::sendEvent(ui->bankScreen->currentWidget(), &event);
-    ui->bankScreen->setCurrentWidget(ui->dscreen);
-    ui->bankScreen->update();
+    QCoreApplication::sendEvent(ui->screenStack->currentWidget(), &event);
+}
+
+void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event)
+{
+    ATMScreen* screen;
+    switch (event->getScreenType()) // init in each case probably
+    {
+        case ScreenType::Default:
+            screen = ui->defaultScreen;
+            break;
+        case ScreenType::EnterPin:
+            screen = ui->enterPinScreen;
+            break;
+    }
+    ui->screenStack->setCurrentWidget(screen);
+    ui->screenStack->update();
 }
 

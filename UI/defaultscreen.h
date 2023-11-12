@@ -16,6 +16,8 @@ public:
     ~DefaultScreen();
 
 private:
+    virtual void onATMButtonPressed(ATMButtonPressedEvent* event) override;
+
     Ui::DefaultScreen *ui;
 };
 
