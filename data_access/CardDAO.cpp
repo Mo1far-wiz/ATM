@@ -261,7 +261,7 @@ void CardDAO::UpdateCard(const Card *card, const uint32_t &creditLimit) {
     updateQuery.bindValue(":cardNumber", card->GetCardNumber());
     updateQuery.bindValue(":cvv", card->GetCVV());
     updateQuery.bindValue(":owner", card->GetOwnerId());
-    updateQuery.bindValue(":currentBalance", card->GetCurrentBalance());
+    updateQuery.bindValue(":currentBalance", card->GetBalance());
     updateQuery.bindValue(":expireDate", card->GetExpireDate());
     updateQuery.bindValue(":cardType_id", static_cast<int>(card->GetCardType()));
     updateQuery.bindValue(":transactionCommission", card->GetTransactionCommission());

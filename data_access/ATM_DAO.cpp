@@ -26,7 +26,6 @@ void ATM_DAO::initialize() {
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'ATM' "
                           "(id              SERIAL      PRIMARY KEY, "
-                          "bankId           SERIAL      NOT NULL, "
                           "moneyLeft        INTEGER     NOT NULL, "
                           "currentCardId    SERIAL      NULL,"
                           "FOREIGN KEY(currentCardId) REFERENCES Card(id));");
@@ -37,17 +36,16 @@ void ATM_DAO::initialize() {
 
 ATM *ATM_DAO::deserializeATM(const QSqlQuery &executedQuery) const {
     uint32_t id             = executedQuery.value("id").toUInt();
-    uint32_t bankId         = executedQuery.value("bankId").toUInt();
     uint32_t moneyLeft      = executedQuery.value("moneyLeft").toUInt();
     uint32_t currentCardId  = executedQuery.value("currentCardId").isNull() ?
                                     -1 : executedQuery.value("currentCardId").toUInt();
 
-    ATM* atm = nullptr;
+    ATM* atm = new ATM(id, moneyLeft);
     qInfo() << "ATM with ID" << id << "was found.";
     return atm;
 }
 
-uint32_t ATM_DAO::getAvailableMoney(const uint32_t &id) {
+uint32_t ATM_DAO::getAvailableMoney(const uint32_t &id) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return -1;
@@ -60,7 +58,7 @@ uint32_t ATM_DAO::getAvailableMoney(const uint32_t &id) {
 
     if (selectQuery.exec()) {
         if (selectQuery.next()) {
-            return deserializeATM(selectQuery)->moneyLeft;
+            return deserializeATM(selectQuery)->GetAvailableWithdraw();
         } else {
             qWarning() << "ATM with " << selectQuery.boundValueName(0) << selectQuery.boundValue(0).toString() << "not found.";
         }
@@ -95,28 +93,28 @@ ATM *ATM_DAO::getAtmById(const uint32_t &id) const{
     return nullptr;
 }
 
-//void ATM_DAO::UpdateATM(const ATM &atm) const {
-//    if (!QSqlDatabase::database().isOpen()) {
-//        qCritical() << "Database is not open.";
-//        return;
-//    }
-//
-//    QSqlQuery updateQuery;
-//    updateQuery.prepare("UPDATE ATM SET "
-//                        "bankId = :bankId, "
-//                        "moneyLeft = :moneyLeft, "
-//                        "currentCardId = :currentCardId "
-//                        "WHERE id = :id");
-//
-//    updateQuery.bindValue(":bankId", atm.getBankId());
-//    updateQuery.bindValue(":moneyLeft", atm.getMoneyLeft());
-//    updateQuery.bindValue(":currentCardId", atm.getCurrentCardId());
-//    updateQuery.bindValue(":id", atm.getId());
-//
-//    if (updateQuery.exec()) {
-//        qDebug() << "ATM with ID" << atm.getId() << "successfully updated.";
-//    } else {
-//        qCritical() << "Error updating ATM:" << updateQuery.lastError().text()
-//                    << "\n\t For query : " << updateQuery.lastQuery();
-//    }
-//}
+void ATM_DAO::UpdateATM(const ATM &atm) {
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
+        return;
+    }
+
+    QSqlQuery updateQuery;
+    updateQuery.prepare("UPDATE ATM SET "
+                        "bankId = :bankId, "
+                        "moneyLeft = :moneyLeft, "
+                        "currentCardId = :currentCardId "
+                        "WHERE id = :id");
+
+    //updateQuery.bindValue(":bankId", atm.GetBankId());
+    updateQuery.bindValue(":moneyLeft", atm.GetAvailableWithdraw());
+    updateQuery.bindValue(":currentCardId", atm.GetInsertedCard()->GetId());
+    updateQuery.bindValue(":id", atm.GetId());
+
+    if (updateQuery.exec()) {
+        qDebug() << "ATM with ID" << atm.GetId() << "successfully updated.";
+    } else {
+        qCritical() << "Error updating ATM:" << updateQuery.lastError().text()
+                    << "\n\t For query : " << updateQuery.lastQuery();
+    }
+}

@@ -15,10 +15,10 @@ class ATM_DAO {
 public:
     static ATM_DAO& getInstance();
 
-    uint32_t getAvailableMoney(const uint32_t &id = 0);
+    [[nodiscard]] uint32_t getAvailableMoney(const uint32_t &id = 0) const;
     [[nodiscard]] ATM* getAtmById(const uint32_t &id = 0) const;
 
-    void UpdateATM(const ATM& atm) const;
+    void UpdateATM(const ATM& atm);
 
 private:
     static void initialize();

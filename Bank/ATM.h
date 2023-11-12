@@ -1,4 +1,8 @@
 #include <iostream>
+#include <QString>
+#include "data_access/CardDAO.h"
+#include "Cards/Card.h"
+#include <functional>
 
 class Bank;
 class Card;
@@ -6,24 +10,24 @@ struct CVV;
 
 class ATM : IId {
 public:
-	ATM(const uint32_t id) : _id(id), _insertedCard(nullptr) {
+	ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
 	}
 	~ATM() {
 		RemoveInsertedCard();
 	}
-	uint32_t GetId() const override {
+	[[nodiscard]] uint32_t GetId() const override {
 		return _id;
 	}
 	/*uint32_t GetBankId() const {
 		return _bankId;
 	}*/
-	uint32_t GetAvailableWithdraw() const {
+	[[nodiscard]] uint32_t GetAvailableWithdraw() const {
 		return _moneyLeft;
 	}
-	uint32_t GetInsertedCardId() const {
+	[[nodiscard]] uint32_t GetInsertedCardId() const {
 		return _insertedCard->GetId();
 	}
-	const Card* GetInsertedCard() const {
+	[[nodiscard]] const Card* GetInsertedCard() const {
 		return _insertedCard;
 	}
 	bool IsCardInserted() {
@@ -31,23 +35,11 @@ public:
 	}
 
 	void RemoveInsertedCard() {
-		if (_insertedCard) {
-			delete _insertedCard;
-		}
-	}
+        delete _insertedCard;
+        _insertedCard = nullptr;
+    }
 	// Returns true if card is valid and pin is correct
-	bool InsertCard(const QString& cardNum, const QString& pin) {
-		// Check if card exists && Check if pin is correct
-		return Get<CardDAO, QString, Card*, Card*>(cardNum, &CardDAO::getByCardNum, 
-		[this, &pin](Card&* c) {
-			if (c && c->GetPinCode() == pin) {
-				RemoveInsertedCard();
-				_insertedCard = c;
-				return c;
-			}
-			throw 0;
-		});
-	}
+	inline bool InsertCard(const QString& cardNum, const QString& pin);
 	
 private:
 	// Id of ATM
@@ -63,7 +55,7 @@ private:
 	 * By default, DAO return dynamically allocated ptr, so this handler deletes it so that user of Get doesn't have to
 	 */
 	template <class R, class U>
-	R DefaultGetHandler(U& r) {
+    static R DefaultGetHandler(U& r) {
 		if (r) {
 			R rr = std::move(*r);
 			delete r;
@@ -81,7 +73,9 @@ private:
 	 * @return Requested object of type R as std::optional<R>, std::nullopt if db query failed, or handler has thrown something
 	 */
 	template <class DAO, class U, class DaoR, class R>
-	std::optional<R> Get(const U& key, DaoR(DAO::* getter)(const U&), R(*f)(DaoR&) = DefaultGetHandler<R, DaoR>) {
+	std::optional<R> Get(const U& key, DaoR(DAO::* getter)(const U&) const, std::function<R(DaoR&)> f = DefaultGetHandler<R, DaoR>
+                         //R(*f)(DaoR&) = DefaultGetHandler<R, DaoR>
+                                 ) {
 		DaoR r = (DAO::getInstance().*getter)(key);
 		try {
 			return f(r);
@@ -91,3 +85,17 @@ private:
 		}
 	}
 };
+
+
+inline bool ATM::InsertCard(const QString& cardNum, const QString& pin) {
+    auto l = [this, &pin](Card*& c) -> Card* {
+        if (c && c->GetPinCode() == pin) {
+            RemoveInsertedCard();
+            _insertedCard = c;
+            return c;
+        }
+        throw 0;
+    };
+        // Check if card exists && Check if pin is correct
+        return (bool)Get<CardDAO, QString, Card*, Card*>(cardNum, &CardDAO::getByCardNum,l);
+}
