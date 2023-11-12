@@ -68,7 +68,7 @@ User *UserDAO::deserializeUser(QSqlQuery &selectQuery) const{
             QString surname     = selectQuery.value("surname").toString();
             QString phoneNum    = selectQuery.value("phoneNum").toString();
 
-            User* user = new User(id, name.toStdString(), surname.toStdString(), phoneNum.toStdString());
+            User* user = new User(id, name, surname, phoneNum);
             qInfo() << "User with ID" << id << "was found.";
             return user;
         } else {
@@ -80,7 +80,7 @@ User *UserDAO::deserializeUser(QSqlQuery &selectQuery) const{
     }
     return nullptr;
 }
-User* UserDAO::getById(uint32_t id) const{
+User* UserDAO::getById(const uint32_t &id) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return nullptr;
@@ -118,7 +118,7 @@ User *UserDAO::getByCardNum(const QString& cardNum) const {
         // Prepare the SQL query
         QSqlQuery selectQuery;
         selectQuery.prepare("SELECT * FROM User WHERE id = :id");
-        selectQuery.bindValue(":id", (uint32_t)card->id);   // change to user id
+        selectQuery.bindValue(":id", card->GetOwnerId());
 
         return deserializeUser(selectQuery);
     }
@@ -126,7 +126,7 @@ User *UserDAO::getByCardNum(const QString& cardNum) const {
     return nullptr;
 }
 
-QList<Card *> UserDAO::getAllUserCards(uint32_t userId) const{
+QList<Card *> UserDAO::getAllUserCards(const uint32_t &userId) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return {};

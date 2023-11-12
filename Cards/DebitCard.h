@@ -1,16 +1,16 @@
 #pragma once
 #include "Card.h"
 
-struct DebitCard : public Card {
-    DebitCard(size_t id, const std::string& cardNumber, size_t currentBalance, std::string cvv,
-              size_t expireDate, const CardType& cardType)
-            : Card(id, cardNumber, currentBalance, cvv, expireDate, cardType) {}
+class DebitCard : public Card {
+public:
+	DebitCard(const uint32_t id, const QString& cardNumber,
+              const QString& cvv, const uint32_t ownerId, const double currentBalance,
+              const uint32_t expireDate, const float transactionCommission,
+              const float withdrawCommission, const uint32_t creditLimit, const QString& pin)
+		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Debit, transactionCommission, withdrawCommission, pin)
+	{}
 
-    virtual size_t GetTransactionCommission() const override {
-        return 1;
-    }
-
-    virtual size_t GetWithdrawCommission() const override {
-        return 2;
-    }
+	virtual QString ToString() const {
+		return ("[DebitCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString()).c_str();
+	}
 };

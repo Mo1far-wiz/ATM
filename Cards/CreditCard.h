@@ -2,19 +2,21 @@
 #include "Card.h"
 
 class CreditCard : public Card {
-private:
-    size_t creditLimit;
-
 public:
-    CreditCard(size_t id, const std::string& cardNumber, size_t currentBalance, std::string cvv,
-               size_t expireDate, const CardType& cardType, size_t creditLimit)
-            : Card(id, cardNumber, currentBalance, cvv, expireDate, cardType), creditLimit(creditLimit) {}
+	CreditCard(const uint32_t id, const QString& cardNumber,
+               const QString& cvv, const uint32_t ownerId, const double currentBalance,
+               const uint32_t expireDate, const float transactionCommission,
+               const float withdrawCommission, const uint32_t creditLimit, const QString& pin)
+		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Credit, transactionCommission, withdrawCommission, pin),
+		_creditLimit(creditLimit)
+	{}
 
-    virtual size_t GetTransactionCommission() const override {
-        return 1;
-    }
-
-    virtual size_t GetWithdrawCommission() const override {
-        return 2;
-    }
+	uint32_t GetCreditLimit() const {
+		return _creditLimit;
+	}
+	virtual QString ToString() const override {
+		return ("[CreditCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString() + " creditLimit: " + std::to_string(_creditLimit)).c_str();
+	}
+private:
+	size_t _creditLimit;
 };

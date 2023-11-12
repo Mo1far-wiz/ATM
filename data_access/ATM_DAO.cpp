@@ -47,7 +47,7 @@ ATM *ATM_DAO::deserializeATM(const QSqlQuery &executedQuery) const {
     return atm;
 }
 
-uint32_t ATM_DAO::getAvailableMoney(uint32_t id) {
+uint32_t ATM_DAO::getAvailableMoney(const uint32_t &id) {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return -1;
@@ -69,4 +69,28 @@ uint32_t ATM_DAO::getAvailableMoney(uint32_t id) {
                     << "\n\t For query : " << selectQuery.lastQuery();
     }
     return -1;
+}
+
+ATM *ATM_DAO::getAtmById(const uint32_t &id) const{
+    if (!QSqlDatabase::database().isOpen()) {
+        qCritical() << "Database is not open.";
+        return nullptr;
+    }
+
+    // Prepare the SQL query
+    QSqlQuery selectQuery;
+    selectQuery.prepare("SELECT moneyLeft FROM ATM WHERE id = :id");
+    selectQuery.bindValue(":id", id);
+
+    if (selectQuery.exec()) {
+        if (selectQuery.next()) {
+            return deserializeATM(selectQuery);
+        } else {
+            qWarning() << "ATM with " << selectQuery.boundValueName(0) << selectQuery.boundValue(0).toString() << "not found.";
+        }
+    } else {
+        qCritical() << "Error retrieving ATM:" << selectQuery.lastError().text()
+                    << "\n\t For query : " << selectQuery.lastQuery();
+    }
+    return nullptr;
 }
