@@ -18,6 +18,8 @@ public:
 
     inline ATMButtonId getButtonId() const { return _id; }
 
+    inline bool isNumber() const { return _id >= ATMButtonId::b_0 && _id <= ATMButtonId::b_9; }
+
 private:
     ATMButtonId _id;
 

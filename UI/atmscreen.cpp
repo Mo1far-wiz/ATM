@@ -19,10 +19,13 @@ bool ATMScreen::event(QEvent *event) {
 
 void ATMScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
     qDebug("Button pressed %d, caught by %s", static_cast<int>(event->getButtonId()), qUtf8Printable(objectName()));
-
 }
 
 void ATMScreen::sendSwitchScreen(ScreenType type) const {
     SwitchScreenEvent event(type);
     QCoreApplication::sendEvent(window(), &event);
+}
+
+void ATMScreen::init() {
+    qDebug("%s init", qUtf8Printable(objectName()));
 }

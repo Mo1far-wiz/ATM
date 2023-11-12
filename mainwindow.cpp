@@ -76,6 +76,7 @@ void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event)
             screen = ui->enterPinScreen;
             break;
     }
+    screen->init();
     ui->screenStack->setCurrentWidget(screen);
     ui->screenStack->update();
 }
