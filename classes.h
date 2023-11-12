@@ -184,7 +184,7 @@ private:
 
 class ATM : IId {
 public:
-	ATM(cons uint32_t id) : _id(id), _insertedCard(nullptr) {
+	ATM(const uint32_t id) : _id(id), _insertedCard(nullptr) {
 	}
 	~ATM() {
 		RemoveInsertedCard();
@@ -202,6 +202,9 @@ public:
 		return _insertedCard->GetId();
 	}
 	const Card* GetInsertedCard() const {
+		return _insertedCard;
+	}
+	bool IsCardInserted() {
 		return _insertedCard;
 	}
 
@@ -234,12 +237,13 @@ private:
 	}
 	// Id of ATM
 	const uint32_t _id;
-	// Bank id
-	// size_t _bankId;
 	// Amount of money left to withdraw
 	size_t _moneyLeft;
 	// Currently inserted card
 	Card* _insertedCard = nullptr;
+
+	// Bank id
+	// size_t _bankId;
 
 	//std::optional<CreditCard> GetCreditCard() {
 	//return Get<CardDAO, size_t, Card*, CreditCard>(8, &CardDAO::getCard,
