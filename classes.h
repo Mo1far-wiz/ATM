@@ -67,13 +67,13 @@ public:
 	std::string GetCardNumber() const {
 		return _cardNumber;
 	}
-	double GetCurrentBalance() const {
+	double GetBalance() const {
 		return _currentBalance;
 	}
 	const std::string& GetCVV() const {
 		return _cvv;
 	}
-	const std::string& GetPinCode() const {
+	const QString& GetPinCode() const {
 		return _pinCode;
 	}
 	size_t GetExpireDate() const {
@@ -101,7 +101,7 @@ protected:
 	Card(const size_t id, const std::string& cardNumber, 
 		const std::string& cvv, const size_t ownerId, const double currentBalance,
 		const size_t expireDate, const CardType cardType, const float transactionCommission,
-		const float witdrawCommission, const std::string& pin) 
+		const float witdrawCommission, const QString& pin) 
 		: _id(id), _cardNumber(cardNumber), _cvv(cvv), _ownerId(ownerId), _currentBalance(currentBalance),
 		_expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
 		_witdrawCommission(withdrawCommission), _pinCode(pin)
@@ -110,7 +110,7 @@ protected:
 private:
 	std::string _cardNumber;
 	std::string _cvv;
-	std::string _pinCode;
+	QString _pinCode;
 	double _currentBalance;
 	float _transactionCommission;
 	float _widthdrawCommission;
@@ -125,7 +125,7 @@ public:
 	DebitCard(const size_t id, const std::string& cardNumber,
 		const std::string& cvv, const size_t ownerId, const double currentBalance,
 		const size_t expireDate, const float transactionCommission,
-		const float witdrawCommission, const size_t creditLimit, const std::string& pin)
+		const float witdrawCommission, const size_t creditLimit, const QString& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Debit, transactionCommission, witdrawCommission, pin)
 	{}
 
@@ -139,7 +139,7 @@ public:
 	CreditCard(const uint32_t id, const std::string& cardNumber,
                const std::string& cvv, const uint32_t ownerId, const double currentBalance,
                const uint32_t expireDate, const float transactionCommission,
-               const float witdrawCommission, const uint32_t creditLimit, const std::string& pin)
+               const float witdrawCommission, const uint32_t creditLimit, const QString& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Credit, transactionCommission, witdrawCommission, pin),
 		_creditLimit(creditLimit)
 	{}
@@ -184,10 +184,11 @@ private:
 
 class ATM : IId {
 public:
-	ATM(size_t id) : _bankRef(bank), id(id) {
-
+	ATM(const uint32_t id) : _id(id), _insertedCard(nullptr) {
 	}
-	~ATM() {}
+	~ATM() {
+		RemoveInsertedCard();
+	}
 	size_t GetId() const override {
 		return _id;
 	}
@@ -197,16 +198,39 @@ public:
 	size_t GetAvailableWithdraw() const {
 		return _moneyLeft;
 	}
-	size_t GetInsertedCardId() const {
-		return _insertedCardId;
+	uint32_t GetInsertedCardId() const {
+		return _insertedCard->GetId();
+	}
+	const Card* GetInsertedCard() const {
+		return _insertedCard;
+	}
+	bool IsCardInserted() {
+		return _insertedCard;
 	}
 
-	std::optional<DebitCard> GetDebitCardByNumber(const QString& num) {
-		return 
+	// Returns true if card is valid and pin is correct
+	bool InsertCard(const QString& cardNum, const QString& pin) {
+		// Check if card exists && Check if pin is correct
+		return Get<CardDAO, QString, Card*, Card*>(cardNum, &CardDAO::getByCardNum, 
+		[this, &pin](Card&* c) {
+			if (c && c->GetPinCode() == pin) {
+				RemoveInsertedCard();
+				_insertedCard = c;
+				return c;
+			}
+			throw 0;
+		});
+	}
+	void RemoveInsertedCard() {
+		if (_insertedCard) {
+			delete _insertedCard;
+		}
 	}
 
-	// [Method] Insert & Verify card
-	void AcceptCard(const Card&);
+	// Return true if withdraw was successfull
+	bool Withdraw(const double amount) {
+		return IsCardInserted() && (GetInsertedCard()->GetBalance() >= amount) && (_moneyLeft >= amount);
+	}
 
 	// [Method] Create a transaction and make Bank process it
 	void CreateTransaction(const Card& from, const Card& to, size_t amount);
@@ -216,36 +240,38 @@ public:
 	void ChangeCVV(const CVV oldCvv);
 	
 private:
-	const size_t _id;
-	// Bank id
-	size_t _bankId;
+	// Id of ATM
+	const uint32_t _id;
 	// Amount of money left to withdraw
 	size_t _moneyLeft;
 	// Currently inserted card
-	size_t _insertedCardId;
+	Card* _insertedCard = nullptr;
 
-	std::optional<CreditCard> GetCreditCard() {
-	return Get<CardDAO, size_t, Card*, CreditCard>(8, &CardDAO::getCard,
-		[](Card* r) {
-			if (r->GetCardType() == CardType::Credit) {
-				CreditCard cr = std::move(*static_cast<CreditCard*>(r));
-				delete r;
-				return cr;
-			}
-			throw 0;
-		});
-	}
+	// Bank id
+	// size_t _bankId;
 
-	std::optional<DebitCard> GetDebitCard() {
-	return Get<CardDAO, size_t, Card*, DebitCard>(8, &CardDAO::getCard, [](Card* r) {
-			if (r->GetCardType() == CardType::Debit) {
-				DebitCard cr = std::move(*static_cast<DebitCard*>(r));
-				delete r;
-				return cr;
-			}
-			throw 0;
-		});
-	}
+	//std::optional<CreditCard> GetCreditCard() {
+	//return Get<CardDAO, size_t, Card*, CreditCard>(8, &CardDAO::getCard,
+	//	[](Card* r) {
+	//		if (r->GetCardType() == CardType::Credit) {
+	//			CreditCard cr = std::move(*static_cast<CreditCard*>(r));
+	//			delete r;
+	//			return cr;
+	//		}
+	//		throw 0;
+	//	});
+	//}
+//
+	//std::optional<DebitCard> GetDebitCard() {
+	//return Get<CardDAO, size_t, Card*, DebitCard>(8, &CardDAO::getCard, [](Card* r) {
+	//		if (r->GetCardType() == CardType::Debit) {
+	//			DebitCard cr = std::move(*static_cast<DebitCard*>(r));
+	//			delete r;
+	//			return cr;
+	//		}
+	//		throw 0;
+	//	});
+	//}
 	
 	/* --- DAO interaction --- */
 	/**
@@ -253,111 +279,112 @@ private:
 	 * By default, DAO return dynamically allocated ptr, so this handler deletes it so that user of Get doesn't have to
 	 */
 	template <class R, class U>
-	R DefaultGetHandler(U r) {
-		R rr = std::move(*r);
-		delete r;
-		return rr;
+	R DefaultGetHandler(U& r) {
+		if (r) {
+			R rr = std::move(*r);
+			delete r;
+			return rr;
+		}
+		throw 0;
 	}
 
 	/**
 	 * Get R from DAO using its getter method which has U as arg and DaoR as return type
-	 * DaoR must be a pointer or a type that can be implicitly casted to bool
+	 * By default, DaoR must be a pointer
 	 * @param key param which will be passed to method of DAO
 	 * @param getter pointer to method of DAO
-	 * @param handler function, which takes DaoR and returns R, also it can throw to make function Get return std::nullopt
+	 * @param handler function, which takes DaoR& and returns R, also it can throw to make function Get return std::nullopt
 	 * @return Requested object of type R as std::optional<R>, std::nullopt if db query failed, or handler has thrown something
 	 */
 	template <class DAO, class U, class DaoR, class R>
-	std::optional<R> Get(const U& key, DaoR (DAO::* getter)(const U&), R(*f)(DaoR) = DefaultGetHandler<R, DaoR>) {
-		if (DaoR r = (DAO::getInstance().*getter)(key)) {
-			try {
-				return f(r);
-			}
-			catch (...) {
-				return std::nullopt;
-			}
+	std::optional<R> Get(const U& key, DaoR(DAO::* getter)(const U&), R(*f)(DaoR&) = DefaultGetHandler<R, DaoR>) {
+		DaoR r = (DAO::getInstance().*getter)(key);
+		try {
+			return f(r);
 		}
-		return std::nullopt;
-	}
-
-	// [Method] Get something by id
-	template <class T>
-	std::optional<T> GetById(const size_t id) {
-		if (T* r = T::DAO::getInstance().getById(id)) {
-			T rr = std::move(*r);
-			delete r;
-			return rr;
+		catch (...) {
+			return std::nullopt;
 		}
-		return std::nullopt;
 	}
 
-	std::optional<User> GetUserById(const size_t userId)
-	{
-		if (User* r = UserDAO::getInstance().getById(userId)) {
-			User rr = std::move(*r);
-			delete r;
-			return rr;
-		}
-		return std::nullopt;
-	}
-
-	// [Method] Get user by phone number
-	std::optional<User> GetUserByPhoneNum(const std::string& phoneNum)
-	{
-		if (User* r = UserDAO::getInstance().getByPhoneNum(userId)) {
-			User rr = std::move(*r);
-			delete r;
-			return rr;
-		}
-		return std::nullopt;
-	}
-
-	// [Method] Get user by card number
-	std::optional<User> GetUserByPhoneNum(const std::string& phoneNum)
-	{
-		if (User* r = UserDAO::getInstance().getByPhoneNum(userId)) {
-			User rr = std::move(*r);
-			delete r;
-			return rr;
-		}
-		return std::nullopt;
-	}
-
-	// [Method] Get user's cards
-	std::optional<std::vector<Card>> GetUserCards(const size_t userId) {
-		if (auto userCardsIds = UserDAO::getInstance().getUserCards(userId)) {
-			const CardDAO& cardDao = CardDAO::getInstance();
-			std::vector<Card> userCards;
-			for (const auto& cardId : *userCardsIds) {
-				if (Card* card = cardDao.getById(cardId)) {
-					userCards.emplace_back(std::move(*card));
-					delete card;
-				}
-				else {
-					return std::nullopt;
-				}
-			}
-			delete userCardsIds;
-			return userCards;
-		}
-		return std::nullopt;
-	}
-
-	// [Method] Add card for user
-	void AddCardForUser(const Card& card) {
-		CardDAO::getInstance().saveCard();
-	}
-
-
-	// [Method] Get transactions history by user
-	std::vector<Transaction> GetTransactionsHistoryByUser(const size_t userId);
-
-	// [Method] Get transactions history by card
-	std::vector<Transaction> GetTransactionsHistoryByCard(const size_t cardId);
-
-	// [Method] Get user balance
-	size_t GetUserBalance(const size_t userId);
-
-	// [Method] Get card balance
-	size_t GetCardBalance(const size_t cardId);
+//	// [Method] Get something by id
+//	template <class T>
+//	std::optional<T> GetById(const size_t id) {
+//		if (T* r = T::DAO::getInstance().getById(id)) {
+//			T rr = std::move(*r);
+//			delete r;
+//			return rr;
+//		}
+//		return std::nullopt;
+//	}
+//
+//	std::optional<User> GetUserById(const size_t userId)
+//	{
+//		if (User* r = UserDAO::getInstance().getById(userId)) {
+//			User rr = std::move(*r);
+//			delete r;
+//			return rr;
+//		}
+//		return std::nullopt;
+//	}
+//
+//	// [Method] Get user by phone number
+//	std::optional<User> GetUserByPhoneNum(const std::string& phoneNum)
+//	{
+//		if (User* r = UserDAO::getInstance().getByPhoneNum(userId)) {
+//			User rr = std::move(*r);
+//			delete r;
+//			return rr;
+//		}
+//		return std::nullopt;
+//	}
+//
+//	// [Method] Get user by card number
+//	std::optional<User> GetUserByPhoneNum(const std::string& phoneNum)
+//	{
+//		if (User* r = UserDAO::getInstance().getByPhoneNum(userId)) {
+//			User rr = std::move(*r);
+//			delete r;
+//			return rr;
+//		}
+//		return std::nullopt;
+//	}
+//
+//	// [Method] Get user's cards
+//	std::optional<std::vector<Card>> GetUserCards(const size_t userId) {
+//		if (auto userCardsIds = UserDAO::getInstance().getUserCards(userId)) {
+//			const CardDAO& cardDao = CardDAO::getInstance();
+//			std::vector<Card> userCards;
+//			for (const auto& cardId : *userCardsIds) {
+//				if (Card* card = cardDao.getById(cardId)) {
+//					userCards.emplace_back(std::move(*card));
+//					delete card;
+//				}
+//				else {
+//					return std::nullopt;
+//				}
+//			}
+//			delete userCardsIds;
+//			return userCards;
+//		}
+//		return std::nullopt;
+//	}
+//
+//	// [Method] Add card for user
+//	void AddCardForUser(const Card& card) {
+//		CardDAO::getInstance().saveCard();
+//	}
+//
+//
+//	// [Method] Get transactions history by user
+//	std::vector<Transaction> GetTransactionsHistoryByUser(const size_t userId);
+//
+//	// [Method] Get transactions history by card
+//	std::vector<Transaction> GetTransactionsHistoryByCard(const size_t cardId);
+//
+//	// [Method] Get user balance
+//	size_t GetUserBalance(const size_t userId);
+//
+//	// [Method] Get card balance
+//	size_t GetCardBalance(const size_t cardId);
 };
