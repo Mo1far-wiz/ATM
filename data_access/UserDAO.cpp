@@ -27,7 +27,7 @@ void UserDAO::initialize() {
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'User' "
-                          "(id SERIAL PRIMARY KEY, "
+                          "(id SERIAL PRIMARY KEY AUTOINCREMENT, "
                           "name TEXT NOT NULL, "
                           "surname TEXT NOT NULL, "
                           "phoneNum VARCHAR(13) NOT NULL);");
@@ -36,7 +36,7 @@ void UserDAO::initialize() {
     isInitialized = true;
 }
 
-void UserDAO::addUser(uint32_t id, const QString &name, const QString &surname, const QString &phoneNum) {
+void UserDAO::addUser(const User* user) {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return;
@@ -45,14 +45,14 @@ void UserDAO::addUser(uint32_t id, const QString &name, const QString &surname, 
     // Prepare the SQL query
     QSqlQuery insertQuery;
     insertQuery.prepare("INSERT INTO User (id, name, surname, phoneNum) VALUES (:id, :name, :surname, :phoneNum)");
-    insertQuery.bindValue(":id", id);
-    insertQuery.bindValue(":name", name);
-    insertQuery.bindValue(":surname", surname);
-    insertQuery.bindValue(":phoneNum", phoneNum);
+    insertQuery.bindValue(":id", user->id);
+    insertQuery.bindValue(":name", user->name);
+    insertQuery.bindValue(":surname", user->surname);
+    insertQuery.bindValue(":phoneNum", user->phoneNum);
 
     // Execute the query
     if (insertQuery.exec()) {
-        qInfo() << "User with ID" << id << "added successfully.";
+        qInfo() << "User with ID" << user->id << "added successfully.";
     } else {
         qCritical() << "Error adding user:" << insertQuery.lastError().text()
                 << "\n\t For query : " << insertQuery.lastQuery();

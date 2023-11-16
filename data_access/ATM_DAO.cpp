@@ -25,7 +25,7 @@ void ATM_DAO::initialize() {
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'ATM' "
-                          "(id              SERIAL      PRIMARY KEY, "
+                          "(id              SERIAL      PRIMARY KEY AUTOINCREMENT, "
                           "moneyLeft        INTEGER     NOT NULL, "
                           "currentCardId    SERIAL      NULL,"
                           "FOREIGN KEY(currentCardId) REFERENCES Card(id));");

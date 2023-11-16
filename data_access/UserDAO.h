@@ -20,7 +20,7 @@ public:
     [[nodiscard]] User* getByCardNum(const QString& cardNum) const;
     [[nodiscard]] QList<Card*> getAllUserCards(const uint32_t &userId) const;
 
-    static void addUser(uint32_t id, const QString &name, const QString &surname, const QString &phoneNum);
+    static void addUser(const User* user);
 
 private:
     static void initialize();
