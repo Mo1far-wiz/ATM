@@ -20,6 +20,9 @@ public:
 	double GetBalance() const {
 		return _currentBalance;
 	}
+	double& GetBalance() {
+		return _currentBalance;
+	}
 	const QString& GetCVV() const {
 		return _cvv;
 	}

@@ -5,37 +5,37 @@
 
 #include "Cards/Card.h"
 
-class Card;
+class User : IId {
+public:
+	User() {
+		std::cout << "User default ctor()\n";
+	}
+	User(const uint32_t id, const QString& name, const QString& surname)
+		: id(id), name(name), surname(surname) {
+		std::cout << "User normal ctor()\n";
+	}
+	~User() {}
 
-struct User {
-    User(const uint32_t id, const QString& name, const QString& surname, const QString& phoneNum)
-            : id(id), name(name), surname(surname), phoneNum(phoneNum) {
+	uint32_t GetId() const override {
+		return _id;
+	}
+	const QString& GetName() const {
+		return _name;
+	}
+	const QString& GetSurname() const {
+		return _surname;
+	}
+	const QString& GetPhoneNumber() const {
+		return _surname;
+	}
+	QString ToString() const {
+		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name + " Surname: " + _surname + " phone: " + _phoneNum).c_str());
+	}
 
-    }
-    ~User() {}
-    uint32_t id;
-    QString name;
-    QString surname;
-    QString phoneNum;
-    QList<Card*> cards;
-
-    QString toString() const {
-        std::string result;
-
-        result += "ID: " + std::to_string(id) + "\n";
-        result += "Name: " + name.toStdString() + "\n";
-        result += "Surname: " + surname.toStdString() + "\n";
-        result += "Phone Number: " + phoneNum.toStdString() + "\n";
-        result += "Cards: ";
-
-        for (auto card: cards) {
-            result += card->ToString().toStdString() + " ";
-        }
-        result += "\n";
-
-        return result.c_str();
-    }
-
-
+private:
+	QString _name;
+	QString _surname;
+	QString _phoneNum;
+	const uint32_t _id;
 };
 
