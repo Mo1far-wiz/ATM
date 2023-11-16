@@ -120,8 +120,8 @@ void TransactionDAO::addTransaction(const Transaction* transaction) const{
 
     // Prepare the SQL query
     QSqlQuery insertTransactionQuery;
-    insertTransactionQuery.prepare("INSERT INTO Transaction (id, fromCardId, toCardId, amount) "
-                                   "VALUES (:id, :fromCardId, :toCardId, :amount)");
+    insertTransactionQuery.prepare("INSERT INTO Transaction (fromCardId, toCardId, amount) "
+                                   "VALUES (:fromCardId, :toCardId, :amount)");
     insertTransactionQuery.bindValue(":fromCardId", transaction->GetFrom());
     insertTransactionQuery.bindValue(":toCardId", transaction->GetTo());
     insertTransactionQuery.bindValue(":amount", transaction->GetAmount());

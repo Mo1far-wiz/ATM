@@ -44,8 +44,7 @@ void UserDAO::addUser(const User* user) {
 
     // Prepare the SQL query
     QSqlQuery insertQuery;
-    insertQuery.prepare("INSERT INTO User (id, name, surname, phoneNum) VALUES (:id, :name, :surname, :phoneNum)");
-    insertQuery.bindValue(":id", user->id);
+    insertQuery.prepare("INSERT INTO User (name, surname, phoneNum) VALUES (:name, :surname, :phoneNum)");
     insertQuery.bindValue(":name", user->name);
     insertQuery.bindValue(":surname", user->surname);
     insertQuery.bindValue(":phoneNum", user->phoneNum);

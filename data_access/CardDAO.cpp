@@ -199,11 +199,10 @@ void CardDAO::addCard(Card *card) const {
 
     // Prepare the SQL query
     QSqlQuery insertCardQuery;
-    insertCardQuery.prepare("INSERT INTO Card (id, cardNumber, cvv, owner, currentBalance, expireDate, "
+    insertCardQuery.prepare("INSERT INTO Card (cardNumber, cvv, owner, currentBalance, expireDate, "
                             "cardType_id, transactionCommission, withdrawCommission, creditLimit, pin) "
-                            "VALUES (:id, :cardNumber, :cvv, :owner, :currentBalance, :expireDate, "
+                            "VALUES (:cardNumber, :cvv, :owner, :currentBalance, :expireDate, "
                             ":cardTypeId, :transactionCommission, :withdrawCommission, :creditLimit, :pin)");
-    insertCardQuery.bindValue(":id", card->GetId());
     insertCardQuery.bindValue(":cardNumber", card->GetCardNumber());
     insertCardQuery.bindValue(":cvv", card->GetCVV());
     insertCardQuery.bindValue(":owner", card->GetOwnerId());
