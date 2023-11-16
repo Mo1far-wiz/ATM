@@ -20,7 +20,7 @@ public:
 
     void addTransaction(uint32_t id, uint32_t fromCardId, uint32_t toCardId, double amount) const;
 
-        private:
+private:
     static void initialize();
 
     [[nodiscard]] Transaction* deserializeTransaction(const QSqlQuery& executedQuery) const;
