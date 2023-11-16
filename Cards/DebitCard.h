@@ -5,7 +5,7 @@ class DebitCard : public Card {
 public:
 	DebitCard(const uint32_t id, const QString& cardNumber,
               const QString& cvv, const uint32_t ownerId, const double currentBalance,
-              const uint32_t expireDate, const float transactionCommission,
+              const QDate& expireDate, const float transactionCommission,
               const float withdrawCommission, const uint32_t creditLimit, const QString& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Debit, transactionCommission, withdrawCommission, pin)
 	{}

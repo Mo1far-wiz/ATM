@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <utility>
+#include <QDate>
 #include "../IId.h"
 #include "CardType.h"
 #include "data_access/CardDAO.h"
@@ -13,10 +14,10 @@ public:
     uint32_t GetId() const override {
 		return _id;
 	}
-	QString GetCardNumber() const {
+	const QString& GetCardNumber() const {
 		return _cardNumber;
 	}
-	double GetCurrentBalance() const {
+	double GetBalance() const {
 		return _currentBalance;
 	}
 	const QString& GetCVV() const {
@@ -25,7 +26,7 @@ public:
 	const QString& GetPinCode() const {
 		return _pinCode;
 	}
-    uint32_t GetExpireDate() const {
+    QDate GetExpireDate() const {
 		return _expireDate;
 	}
 	CardType GetCardType() const {
@@ -49,7 +50,7 @@ public:
 protected:
 	Card(const uint32_t id, const QString& cardNumber,
          const QString& cvv, const uint32_t ownerId, const double currentBalance,
-         const uint32_t expireDate, const CardType cardType, const float transactionCommission,
+         const QDate& expireDate, const CardType cardType, const float transactionCommission,
          const float withdrawCommission, const QString& pin)
 		: _id(id), _cardNumber(cardNumber), _cvv(cvv), _ownerId(ownerId), _currentBalance(currentBalance),
           _expireDate(expireDate), _cardType(cardType), _transactionCommission(transactionCommission),
@@ -63,7 +64,7 @@ protected:
 	double _currentBalance;
 	float _transactionCommission;
 	float _withdrawCommission;
-	uint32_t _expireDate;
+	QDate _expireDate;
     uint32_t _ownerId;
 	const uint32_t _id;
 	CardType _cardType;
