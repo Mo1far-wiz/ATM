@@ -30,6 +30,9 @@
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
+          <property name="topMargin">
+           <number>100</number>
+          </property>
           <item>
            <widget class="QPushButton" name="l_1">
             <property name="text">
@@ -61,7 +64,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QStackedWidget" name="bankScreen">
+         <widget class="QStackedWidget" name="screenStack">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -69,9 +72,9 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
-          <widget class="EnterPinScreen" name="escreen">
+          <widget class="EnterPinScreen" name="enterPinScreen">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -79,13 +82,17 @@
             </sizepolicy>
            </property>
           </widget>
-          <widget class="DefaultScreen" name="dscreen"/>
+          <widget class="MainScreen" name="mainScreen"/>
+          <widget class="DefaultScreen" name="defaultScreen"/>
          </widget>
         </item>
         <item>
          <layout class="QVBoxLayout" name="right_buttons">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <property name="topMargin">
+           <number>100</number>
           </property>
           <item>
            <widget class="QPushButton" name="r_1">
@@ -229,6 +236,12 @@
    <class>DefaultScreen</class>
    <extends>QWidget</extends>
    <header>UI/defaultscreen.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MainScreen</class>
+   <extends>QWidget</extends>
+   <header>UI/mainscreen.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

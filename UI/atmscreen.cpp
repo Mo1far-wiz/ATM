@@ -1,5 +1,7 @@
+#include <QtCore/qcoreapplication.h>
 #include "atmscreen.h"
 #include "Events/atmbuttonpressedevent.h"
+#include "Events/switchscreenevent.h"
 
 ATMScreen::ATMScreen(QWidget *parent)
     : QWidget{parent}
@@ -12,10 +14,18 @@ bool ATMScreen::event(QEvent *event) {
         return true;
     }
 
-    return false;
+    return QWidget::event(event);
 }
 
 void ATMScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
-    qDebug("Button pressed %d, caught %s", static_cast<int>(event->getButtonId()), qUtf8Printable(objectName()));
+    qDebug("Button pressed %d, caught by %s", static_cast<int>(event->getButtonId()), qUtf8Printable(objectName()));
+}
 
+void ATMScreen::sendSwitchScreen(ScreenType type) const {
+    SwitchScreenEvent event(type);
+    QCoreApplication::sendEvent(window(), &event);
+}
+
+void ATMScreen::init(QObject* initObject) {
+    qDebug("%s init", qUtf8Printable(objectName()));
 }

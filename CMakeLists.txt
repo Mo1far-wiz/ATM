@@ -48,7 +48,10 @@ add_executable(${PROJECT_NAME}
         Events/atmbuttonpressedevent.h Events/atmbuttonpressedevent.cpp
         UI/enterpinscreen.h UI/enterpinscreen.cpp UI/enterpinscreen.ui
         UI/atmscreen.h UI/atmscreen.cpp
-        UI/defaultscreen.h UI/defaultscreen.cpp UI/defaultscreen.ui)
+        UI/defaultscreen.h UI/defaultscreen.cpp UI/defaultscreen.ui
+        Events/switchscreenevent.h Events/switchscreenevent.cpp
+        Events/screentype.h
+        UI/mainscreen.h UI/mainscreen.cpp UI/mainscreen.ui)
 
 target_link_libraries(${PROJECT_NAME}
         Qt6::Core

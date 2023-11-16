@@ -1,6 +1,8 @@
+#pragma once
+
 #include <iostream>
 #include <QString>
-#include "data_access/CardDAO.h"
+#include "data_access/UserDAO.h"
 #include "Cards/Card.h"
 #include <functional>
 
@@ -41,7 +43,7 @@ public:
 	const User* getInsertedCardOwner(const QString& cardNum) {
 		User* user = nullptr;
 		if (_insertedCard) {
-			user = CardDAO::getInstance().getByCardNum(_insertedCard->GetCardNumber());
+			user = UserDAO::getInstance().getByCardNum(_insertedCard->GetCardNumber());
 		}
 		return user;
 	}
