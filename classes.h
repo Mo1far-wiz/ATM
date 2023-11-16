@@ -212,8 +212,8 @@ public:
 	bool InsertCard(const QString& cardNum, const QString& pin) {
 		// Check if card exists && Check if pin is correct
 		return Get<CardDAO, QString, Card*, Card*>(cardNum, &CardDAO::getByCardNum, 
-		[this, &pin](Card&* c) {
-			if (c && c->GetPinCode() == pin) {
+		[this, &pin](Card*& c) {
+			if (c->GetPinCode() == pin) {
 				RemoveInsertedCard();
 				_insertedCard = c;
 				return c;
@@ -229,7 +229,10 @@ public:
 
 	// Return true if withdraw was successfull
 	bool Withdraw(const double amount) {
-		return IsCardInserted() && (GetInsertedCard()->GetBalance() >= amount) && (_moneyLeft >= amount);
+		if (IsCardInserted() && (GetInsertedCard()->GetBalance() >= amount) && (_moneyLeft >= amount)) {
+			_insertedCard->
+			CardDAO::getInstance().UpdateCard(_insertedCard);
+		}
 	}
 
 	// [Method] Create a transaction and make Bank process it
@@ -299,6 +302,17 @@ private:
 	template <class DAO, class U, class DaoR, class R>
 	std::optional<R> Get(const U& key, DaoR(DAO::* getter)(const U&), R(*f)(DaoR&) = DefaultGetHandler<R, DaoR>) {
 		DaoR r = (DAO::getInstance().*getter)(key);
+		try {
+			return f(r);
+		}
+		catch (...) {
+			return std::nullopt;
+		}
+	}
+	
+	template <>
+	std::optional<Card*> Get(const QString& key, Card*(CardDAO::* getter)(const QString&), Card*(*f)(Card*&)) {
+		DaoR r = (CardDAO::getInstance().*getter)(key);
 		try {
 			return f(r);
 		}

@@ -13,7 +13,7 @@ public:
     uint32_t GetId() const override {
 		return _id;
 	}
-	QString GetCardNumber() const {
+	const QString& GetCardNumber() const {
 		return _cardNumber;
 	}
 	double GetBalance() const {
