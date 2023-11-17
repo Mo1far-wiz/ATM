@@ -4,6 +4,9 @@
 #include <QString>
 #include "data_access/UserDAO.h"
 #include "Cards/Card.h"
+#include "Cards/DebitCard.h"
+#include "Cards/CreditCard.h"
+#include "data_access/TransactionDAO.h"
 #include <functional>
 
 class Bank;
@@ -67,12 +70,21 @@ public:
 		float txComission = amount * _insertedCard->GetTransactionCommission();
 		if (_moneyLeft < amount && _insertedCard->GetBalance() < amount + txComission) { return false; }
 		_moneyLeft -= amount;
-		double totalCost -= txComission + amount;
+		double totalCost = txComission + amount;
 		_insertedCard->GetBalance() -= totalCost;
-		CardDAO::getInstance().UpdateCard(_insertedCard->GetCardType() == CardType::Debit ? dynamic_cast<DebitCard&>(*_insertedCard) : dynamic_cast<CreditCard&>(*_insertedCard));
-		// tx
-		Transaction tx(0, _insertedCard->getId(), 0, totalCost);
-		TransactionDAO::getInstance().addTransaction();
+
+        if(_insertedCard->GetCardType() == CardType::Debit)
+        {
+            CardDAO::getInstance().UpdateCard( dynamic_cast<DebitCard&>(*_insertedCard));
+        }
+        else if (_insertedCard->GetCardType() == CardType::Credit)
+        {
+            CardDAO::getInstance().UpdateCard( dynamic_cast<CreditCard&>(*_insertedCard));
+        }
+
+        // tx
+		Transaction tx(0, _insertedCard->GetId(), 0, totalCost);
+		TransactionDAO::getInstance().addTransaction(&tx);
 		return true;
 	}
 	

@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
         TransactionDAO::getInstance();
 
         userDao.addUser(new User(1, "Frdy", "Fzber", "+1987"));
-        User* user = userDao.getByPhoneNum("+1987");
+        User* user = userDao.getById(0);
+        User* user2 = userDao.getByPhoneNum("+1987");
 //        cardDao.addCard(0, "1987", "111", 0, 14.88,
 //                        QDate::currentDate(), 0, 0.1,
 //                        0.3, 0,"123");

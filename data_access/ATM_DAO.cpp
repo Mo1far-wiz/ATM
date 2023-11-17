@@ -60,7 +60,7 @@ uint32_t ATM_DAO::getAvailableMoney(const uint32_t &id) const{
 
     if (selectQuery.exec()) {
         if (selectQuery.next()) {
-            return deserializeATM(selectQuery)->GetAvailableWithdraw();
+            return deserializeATM(selectQuery)->getAvailableWithdraw();
         } else {
             qWarning() << "ATM with " << selectQuery.boundValueName(0) << selectQuery.boundValue(0).toString() << "not found.";
         }
@@ -109,8 +109,8 @@ void ATM_DAO::UpdateATM(const ATM &atm) {
                         "WHERE id = :id");
 
     //updateQuery.bindValue(":bankId", atm.GetBankId());
-    updateQuery.bindValue(":moneyLeft", atm.GetAvailableWithdraw());
-    updateQuery.bindValue(":currentCardId", atm.GetInsertedCard()->GetId());
+    updateQuery.bindValue(":moneyLeft", atm.getAvailableWithdraw());
+    updateQuery.bindValue(":currentCardId", atm.getInsertedCardId());
     updateQuery.bindValue(":id", atm.GetId());
 
     if (updateQuery.exec()) {

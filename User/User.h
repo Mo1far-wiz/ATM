@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <QString>
@@ -8,10 +10,9 @@
 class User : IId {
 public:
 	User() = delete;
-	User(const uint32_t id, const QString& name, const QString& surname)
-		: _id(id), _name(name), _surname(surname) {
-		std::cout << "User normal ctor()\n";
-	}
+	User(const uint32_t id, const QString& name, const QString& surname, const QString& phoneNum)
+		: _id(id), _name(name), _surname(surname), _phoneNum(phoneNum) {
+    }
 	~User() {}
 
 	uint32_t GetId() const override {
@@ -24,7 +25,7 @@ public:
 		return _surname;
 	}
 	const QString& GetPhoneNumber() const {
-		return _surname;
+		return _phoneNum;
 	}
 	QString ToString() const {
 		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name.toStdString() + " Surname: " + _surname.toStdString() + " phone: " + _phoneNum.toStdString()).c_str());
