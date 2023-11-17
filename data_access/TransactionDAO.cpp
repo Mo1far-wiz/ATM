@@ -12,30 +12,30 @@ uint32_t TransactionDAO::_id = 1;
 
 TransactionDAO &TransactionDAO::getInstance() {
     static TransactionDAO instance;
-    initialize();
+    static bool isInitialized = false;
+    if(!isInitialized) {
+        initialize();
+    }
+    isInitialized = true;
     return instance;
 }
 
 void TransactionDAO::initialize() {
-    static bool isInitialized = false;
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return;
-    } else if (isInitialized) {
-        qInfo() << "Database is already initialized.";
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Transaction' "
                           "(id          SERIAL      PRIMARY KEY, "
                           "fromCardId   SERIAL      NOT NULL, "
-                          "toCardId     SERIAL      NULL, "
+                          "toCardId     SERIAL      NOT NULL, "
                           "amount       DOUBLE      NOT NULL, "
-                          "FOREIGN KEY(fromCardId) REFERENCES Card(id), "
-                          "FOREIGN KEY(toCardId) REFERENCES Card(id));");
+                          "FOREIGN KEY(fromCardId) REFERENCES Card(fromCardId), "
+                          "FOREIGN KEY(toCardId) REFERENCES Card(toCardId));");
 
 
-    qInfo() << "Creation of the 'Transaction' table was successful: " << createQuery.isActive();
-    isInitialized = true;
+    qInfo() << "Creation of the 'Transaction' table was successful: \t" << createQuery.isActive();
 }
 
 Transaction *TransactionDAO::deserializeTransaction(const QSqlQuery &executedQuery) const {
@@ -74,7 +74,7 @@ QList<Transaction *> TransactionDAO::getCardTransactions(const uint32_t &cardId)
 
     // Prepare the SQL query
     QSqlQuery selectQuery;
-    selectQuery.prepare("SELECT * FROM Transaction "
+    selectQuery.prepare("SELECT * FROM 'Transaction' "
                         "WHERE fromCardId = :fromCardId OR toCardId = :toCardId");
     selectQuery.bindValue(":fromCardId", cardId);
     selectQuery.bindValue(":toCardId", cardId);
@@ -96,7 +96,7 @@ QList<Transaction *> TransactionDAO::getUserTransactions(const uint32_t &userId)
 
     // Prepare the SQL query
     QSqlQuery selectQuery;
-    selectQuery.prepare("SELECT DISTINCT * FROM Transaction "
+    selectQuery.prepare("SELECT DISTINCT * FROM 'Transaction' "
                         "WHERE fromCardId IN ("
                         "SELECT id FROM Card WHERE owner = :from)"
                         "OR"
@@ -119,11 +119,16 @@ void TransactionDAO::addTransaction(const Transaction* transaction) const{
         qCritical() << "Database is not open.";
         return;
     }
+    else if (!transaction)
+    {
+        qCritical() << "Can't add transaction, transaction is null.";
+        return;
+    }
 
     // Prepare the SQL query
     QSqlQuery insertTransactionQuery;
-    insertTransactionQuery.prepare("INSERT INTO Transaction (id, fromCardId, toCardId, amount) "
-                                   "VALUES (:id, :fromCardId, :toCardId, :amount)");
+    insertTransactionQuery.prepare("INSERT INTO 'Transaction' (id, fromCardId, toCardId, amount) VALUES (:id, :fromCardId, :toCardId, :amount)");
+
     insertTransactionQuery.bindValue(":id", _id++);
     insertTransactionQuery.bindValue(":fromCardId", transaction->GetFrom());
     insertTransactionQuery.bindValue(":toCardId", transaction->GetTo());
@@ -131,7 +136,7 @@ void TransactionDAO::addTransaction(const Transaction* transaction) const{
 
     // Execute the query
     if (insertTransactionQuery.exec()) {
-        qInfo() << "Transaction with ID " << transaction->GetId() << " from Card ID " << transaction->GetFrom() << " to Card ID " << transaction->GetTo() << " added successfully.";
+        qInfo() << "Transaction with ID " << _id-1 << ", fromCardID " << transaction->GetFrom() << ", toCardID " << transaction->GetTo() << " added successfully.";
     } else {
         qCritical() << "Error adding transaction:" << insertTransactionQuery.lastError().text()
                     << "\n\t For query : " << insertTransactionQuery.lastQuery();

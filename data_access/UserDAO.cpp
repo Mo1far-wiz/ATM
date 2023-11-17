@@ -9,21 +9,23 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
-uint32_t UserDAO::_id = 1;
+uint32_t UserDAO::_id = 0;
 
 UserDAO &UserDAO::getInstance() {
     static UserDAO instance;
-    initialize();
+    static bool isInitialized = false;
+    if (!isInitialized)
+    {
+        initialize();
+    }
+    isInitialized = true;
     return instance;
 }
 
 void UserDAO::initialize() {
-    static bool isInitialized = false;
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return;
-    } else if (isInitialized) {
-        qInfo() << "Database is already initialized.";
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'User' "
@@ -32,13 +34,17 @@ void UserDAO::initialize() {
                           "surname TEXT NOT NULL, "
                           "phoneNum VARCHAR(13) NOT NULL);");
 
-    qInfo() << "Creation of the 'User' table was successful: " << createQuery.isActive();
-    isInitialized = true;
+    qInfo() << "Creation of the 'User' table was successful: \t" << createQuery.isActive();
 }
 
 void UserDAO::addUser(const User* user) {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
+        return;
+    }
+    else if (!user)
+    {
+        qCritical() << "Can't add user, user is null.";
         return;
     }
 
@@ -52,7 +58,7 @@ void UserDAO::addUser(const User* user) {
 
     // Execute the query
     if (insertQuery.exec()) {
-        qInfo() << "User added successfully.";
+        qInfo() << "User with ID " << _id-1 << " added successfully.";
     } else {
         qCritical() << "Error adding user:" << insertQuery.lastError().text()
                     << "\n\t For query : " << insertQuery.lastQuery();
