@@ -7,11 +7,9 @@
 
 class User : IId {
 public:
-	User() {
-		std::cout << "User default ctor()\n";
-	}
+	User() = delete;
 	User(const uint32_t id, const QString& name, const QString& surname)
-		: id(id), name(name), surname(surname) {
+		: _id(id), _name(name), _surname(surname) {
 		std::cout << "User normal ctor()\n";
 	}
 	~User() {}
@@ -29,7 +27,7 @@ public:
 		return _surname;
 	}
 	QString ToString() const {
-		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name + " Surname: " + _surname + " phone: " + _phoneNum).c_str());
+		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name.toStdString() + " Surname: " + _surname.toStdString() + " phone: " + _phoneNum.toStdString()).c_str());
 	}
 
 private:
