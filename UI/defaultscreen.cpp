@@ -19,6 +19,6 @@ void DefaultScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
 
     if (event->getButtonId() == ATMButtonId::b_enter)
     {
-        sendSwitchScreen(ScreenType::EnterPin);
+        sendSwitchScreen(ScreenType::DoubleInput);
     }
 }

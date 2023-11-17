@@ -73,7 +73,7 @@ bool EnterPinScreen::tryLogin() const {
     return ATM::getInstance().login(num, pin);
 }
 
-void EnterPinScreen::init(QObject* initObject) {
+void EnterPinScreen::init(const QObject* initObject) {
     ATMScreen::init(initObject);
 
     ui->cardNumber->clear();

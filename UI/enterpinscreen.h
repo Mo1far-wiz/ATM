@@ -16,7 +16,7 @@ public:
     explicit EnterPinScreen(QWidget *parent = nullptr);
     ~EnterPinScreen();
 
-    virtual void init(QObject* initObject) override;
+    virtual void init(const QObject* initObject) override;
 
 private:
     virtual void onATMButtonPressed(ATMButtonPressedEvent* event) override;

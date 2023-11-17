@@ -56,7 +56,7 @@ void WithdrawScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
     }
 }
 
-void WithdrawScreen::init(QObject *initObject) {
+void WithdrawScreen::init(const QObject *initObject) {
     ATMScreen::init(initObject);
 
     const ATM& atm = ATM::getInstance();

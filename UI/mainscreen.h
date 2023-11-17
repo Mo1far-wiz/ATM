@@ -15,7 +15,7 @@ public:
     explicit MainScreen(QWidget *parent = nullptr);
     ~MainScreen();
 
-    virtual void init(QObject* initObject) override;
+    virtual void init(const QObject* initObject) override;
 
 protected:
     virtual void onATMButtonPressed(ATMButtonPressedEvent* event) override;

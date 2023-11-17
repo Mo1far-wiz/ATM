@@ -15,12 +15,12 @@ public:
 
     virtual bool event(QEvent* event) override;
 
-    virtual void init(QObject* initObject);
+    virtual void init(const QObject* initObject);
 
 protected:
     virtual void onATMButtonPressed(ATMButtonPressedEvent* event);
 
-    void sendSwitchScreen(ScreenType type) const;
+    void sendSwitchScreen(ScreenType type, const QObject* initObject = nullptr) const;
 
 signals:
 };

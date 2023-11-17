@@ -4,7 +4,7 @@
 enum class ScreenType : int
 {
     Default,
-    EnterPin,
+    DoubleInput,
     Main,
     Withdraw,
 };
