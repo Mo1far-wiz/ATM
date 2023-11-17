@@ -15,6 +15,12 @@ struct CVV;
 
 class ATM : IId {
 public:
+
+    static ATM& getInstance() {
+        static ATM atm(0, 100000);
+        return atm;
+    }
+
 	ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
 	}
 	// ! After class is deleted, ptrs to inserted card are not valid anymore
