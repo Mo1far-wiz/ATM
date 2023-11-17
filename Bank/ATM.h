@@ -21,12 +21,6 @@ public:
         return atm;
     }
 
-	ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
-	}
-	// ! After class is deleted, ptrs to inserted card are not valid anymore
-	~ATM() {
-		removeInsertedCard();
-	}
     [[nodiscard]] uint32_t GetId() const override {
 		return _id;
 	}
@@ -95,6 +89,13 @@ public:
 	}
 	
 private:
+    ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
+    }
+    // ! After class is deleted, ptrs to inserted card are not valid anymore
+    ~ATM() {
+        removeInsertedCard();
+    }
+
 	// Id of ATM
 	const uint32_t _id;
 	// Amount of money left to withdraw
