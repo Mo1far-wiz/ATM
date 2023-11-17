@@ -41,10 +41,9 @@ ATM *ATM_DAO::deserializeATM(const QSqlQuery &executedQuery) const {
     uint32_t moneyLeft      = executedQuery.value("moneyLeft").toUInt();
     uint32_t currentCardId  = executedQuery.value("currentCardId").isNull() ?
                                     -1 : executedQuery.value("currentCardId").toUInt();
-
-    ATM* atm = new ATM(id, moneyLeft);
+    //ATM* atm = new ATM(id, moneyLeft);
     qInfo() << "ATM with ID" << id << "was found.";
-    return atm;
+    return nullptr;
 }
 
 uint32_t ATM_DAO::getAvailableMoney(const uint32_t &id) const{
