@@ -6,10 +6,12 @@
 #include "../IId.h"
 #include "CardType.h"
 #include "data_access/CardDAO.h"
+#include "Bank/Transaction.h"
+#include "data_access/TransactionDAO.h"
 
 class CardDAO;
 
-class Card : IId {
+class Card : IId, QObject {
 public:
     uint32_t GetId() const override {
 		return _id;

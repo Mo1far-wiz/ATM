@@ -28,17 +28,16 @@ public:
 	[[nodiscard]] uint32_t getInsertedCardId() const {
 		return _insertedCard->GetId();
 	}
-	bool isCardInserted() {
-		return _insertedCard;
-	}
 	void removeInsertedCard() {
 		delete _insertedCard;
 		_insertedCard = nullptr;
 	}
+
 	const Card* getInsertedCard() const {
 		return _insertedCard;
 	}
-	const User* getInsertedCardOwner(const QString& cardNum) {
+
+	const User* getInsertedCardOwner() {
 		User* user = nullptr;
 		if (_insertedCard) {
 			user = UserDAO::getInstance().getByCardNum(_insertedCard->GetCardNumber());
@@ -81,7 +80,7 @@ public:
 		return true;
 	}
 
-	bool sendTransaction(const QString& recvCardNum, const uint32 amount) {
+	bool sendTransaction(const QString& recvCardNum, const uint32_t amount) {
 		// Check if card is inserted
 		if (!isCardInserted()) { return false; }
 		// Check if card balaance is enough to create transaction

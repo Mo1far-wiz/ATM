@@ -6,8 +6,9 @@
 #include <QtCore/QObject>
 
 #include "Cards/Card.h"
+#include "data_access/UserDAO.h"
 
-class User : IId {
+class User : IId, QObject {
 public:
 	User() = delete;
 	User(const uint32_t id, const QString& name, const QString& surname, const QString& phoneNum)
@@ -32,7 +33,7 @@ public:
 	}
 
     QList<Card*> getUserCards() const {
-		return UserDAO::getInstance().getAllUserCards(GetId());
+		return CardDAO::getInstance().getAllUserCards(GetId());
 	}
 
 private:
