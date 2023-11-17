@@ -8,6 +8,8 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
+uint32_t TransactionDAO::_id = 0;
+
 TransactionDAO &TransactionDAO::getInstance() {
     static TransactionDAO instance;
     initialize();
@@ -26,7 +28,7 @@ void TransactionDAO::initialize() {
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Transaction' "
                           "(id          SERIAL      PRIMARY KEY, "
                           "fromCardId   SERIAL      NOT NULL, "
-                          "toCardId     SERIAL      NOT NULL, "
+                          "toCardId     SERIAL      NULL, "
                           "amount       DOUBLE      NOT NULL, "
                           "FOREIGN KEY(fromCardId) REFERENCES Card(id), "
                           "FOREIGN KEY(toCardId) REFERENCES Card(id));");
@@ -112,7 +114,7 @@ QList<Transaction *> TransactionDAO::getUserTransactions(const uint32_t &userId)
     return {};
 }
 
-void TransactionDAO::addTransaction(uint32_t id, uint32_t fromCardId, uint32_t toCardId, double amount) const{
+void TransactionDAO::addTransaction(const Transaction* transaction) const{
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return;
@@ -122,14 +124,14 @@ void TransactionDAO::addTransaction(uint32_t id, uint32_t fromCardId, uint32_t t
     QSqlQuery insertTransactionQuery;
     insertTransactionQuery.prepare("INSERT INTO Transaction (id, fromCardId, toCardId, amount) "
                                    "VALUES (:id, :fromCardId, :toCardId, :amount)");
-    insertTransactionQuery.bindValue(":id", id);
-    insertTransactionQuery.bindValue(":fromCardId", fromCardId);
-    insertTransactionQuery.bindValue(":toCardId", toCardId);
-    insertTransactionQuery.bindValue(":amount", amount);
+    insertTransactionQuery.bindValue(":id", _id++);
+    insertTransactionQuery.bindValue(":fromCardId", transaction->GetFrom());
+    insertTransactionQuery.bindValue(":toCardId", transaction->GetTo());
+    insertTransactionQuery.bindValue(":amount", transaction->GetAmount());
 
     // Execute the query
     if (insertTransactionQuery.exec()) {
-        qInfo() << "Transaction with ID " << id << " from Card ID " << fromCardId << " to Card ID " << toCardId << " added successfully.";
+        qInfo() << "Transaction with ID " << transaction->GetId() << " from Card ID " << transaction->GetFrom() << " to Card ID " << transaction->GetTo() << " added successfully.";
     } else {
         qCritical() << "Error adding transaction:" << insertTransactionQuery.lastError().text()
                     << "\n\t For query : " << insertTransactionQuery.lastQuery();

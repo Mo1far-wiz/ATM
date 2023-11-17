@@ -21,6 +21,7 @@ public:
     void UpdateATM(const ATM& atm);
 
 private:
+    static uint32_t _id;
     static void initialize();
 
     [[nodiscard]] ATM* deserializeATM(const QSqlQuery& executedQuery) const;
