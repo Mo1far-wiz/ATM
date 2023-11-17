@@ -26,7 +26,7 @@ void MainScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
             sendSwitchScreen(ScreenType::Withdraw);
             break;
         case ATMButtonId::l_4:
-            sendSwitchScreen(ScreenType::DoubleInput/*, ATM::getInstance().getInsertedCard()*/);
+            sendSwitchScreen(ScreenType::DoubleInput, ATM::getInstance().getInsertedCard());
             break;
         case ATMButtonId::r_3:
             break;

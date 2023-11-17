@@ -34,6 +34,8 @@ private:
 
     bool tryTransaction() const;
 
+    QString getBalance() const;
+
     Mode mode = Mode::EnterPin;
 
     QString defaultText;

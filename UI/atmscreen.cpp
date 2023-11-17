@@ -22,7 +22,7 @@ void ATMScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
 }
 
 void ATMScreen::sendSwitchScreen(ScreenType type, const QObject* initObject) const {
-    SwitchScreenEvent event(type);
+    SwitchScreenEvent event(type, initObject);
     QCoreApplication::sendEvent(window(), &event);
 }
 

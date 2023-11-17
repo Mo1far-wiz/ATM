@@ -24,16 +24,19 @@ void DoubleInputScreen::init(const QObject* initObject) {
         defaultText = "Enter the receiver and amount";
         mode = Mode::Transaction;
         ui->value->setInputMask("999999");
+        ui->value->setPlaceholderText("Amount");
     }
     else
     {
         defaultText = "Please, enter your pin";
         mode = Mode::EnterPin;
         ui->value->setInputMask("9999");
+        ui->value->setPlaceholderText("PIN");
     }
     ui->cardNumber->clear();
     ui->value->clear();
     ui->label->setText(defaultText);
+    ui->labelOptional->setText(getBalance());
     currentLine = ui->cardNumber;
     currentLine->setFocus();
 }
@@ -45,6 +48,7 @@ void DoubleInputScreen::onATMButtonPressed(ATMButtonPressedEvent *event)
     ATMButtonId id = event->getButtonId();
 
     ui->label->setText(defaultText);
+    ui->labelOptional->setText(getBalance());
     
     switch (id) {
         case ATMButtonId::b_back:
@@ -124,12 +128,22 @@ bool DoubleInputScreen::tryLogin() const {
     QString num = ui->cardNumber->text();
     QString pin = ui->value->text();
     qDebug("Login attempt. Card %s, PIN %s", qUtf8Printable(num), qUtf8Printable(pin));
-    return ATM::getInstance().login(num, pin);
+    return ATM::getInstance().insertCard(num, pin);
 }
 
 bool DoubleInputScreen::tryTransaction() const {
     QString num = ui->cardNumber->text();
     QString val = ui->value->text();
     qDebug("Transaction attempt. Card from %s, Card to %s, val %s", qUtf8Printable(ATM::getInstance().getInsertedCard()->GetCardNumber()), qUtf8Printable(num), qUtf8Printable(val));
-    return ATM::getInstance().login(num, val);
+    return ATM::getInstance().sendTransaction(num, val.toInt());
+}
+
+QString DoubleInputScreen::getBalance() const {
+    switch (mode) {
+        case Mode::EnterPin:
+            return "";
+
+        case Mode::Transaction:
+            return "Your balance: " + QString::number(ATM::getInstance().getInsertedCard()->GetBalance());
+    }
 }
