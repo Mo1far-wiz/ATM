@@ -1,6 +1,7 @@
 #include "mainscreen.h"
 #include "ui_mainscreen.h"
 #include "Events/atmbuttonpressedevent.h"
+#include "Bank/ATM.h"
 
 MainScreen::MainScreen(QWidget *parent)
     : ATMScreen(parent)
@@ -40,5 +41,6 @@ void MainScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
 void MainScreen::init(QObject *initObject) {
     ATMScreen::init(initObject);
 
-    // cast init obj to user and set name
+    QString name = ATM::getInstance().getInsertedCardOwner()->GetName();
+    ui->nameLabel->setText("Welcome, " + name);
 }

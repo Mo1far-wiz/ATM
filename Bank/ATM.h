@@ -43,7 +43,7 @@ public:
 	const Card* getInsertedCard() const {
 		return _insertedCard;
 	}
-	const User* getInsertedCardOwner(const QString& cardNum) {
+	const User* getInsertedCardOwner() {
 		User* user = nullptr;
 		if (_insertedCard) {
 			user = UserDAO::getInstance().getByCardNum(_insertedCard->GetCardNumber());

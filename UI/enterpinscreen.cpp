@@ -1,6 +1,7 @@
 #include "enterpinscreen.h"
 #include "ui_enterpinscreen.h"
 #include "Events/atmbuttonpressedevent.h"
+#include "Bank/ATM.h"
 
 EnterPinScreen::EnterPinScreen(QWidget *parent)
     : ATMScreen(parent)
@@ -29,7 +30,11 @@ void EnterPinScreen::onATMButtonPressed(ATMButtonPressedEvent *event)
             break;
 
         case ATMButtonId::b_enter:
-            if (!tryLogin())
+            if (tryLogin())
+            {
+                sendSwitchScreen(ScreenType::Main);
+            }
+            else
             {
                 ui->label_2->setText("Login failed!");
             }
@@ -65,8 +70,7 @@ bool EnterPinScreen::tryLogin() const {
     QString num = ui->cardNumber->text();
     QString pin = ui->cardPin->text();
     qDebug("Login attempt. Card %s, PIN %s", qUtf8Printable(num), qUtf8Printable(pin));
-    sendSwitchScreen(ScreenType::Main);
-    return false;
+    return ATM::getInstance().login(num, pin);;
 }
 
 void EnterPinScreen::init(QObject* initObject) {
