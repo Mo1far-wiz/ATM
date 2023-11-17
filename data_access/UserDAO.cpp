@@ -9,7 +9,7 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
-uint32_t UserDAO::_id = 0;
+uint32_t UserDAO::_id = 1;
 
 UserDAO &UserDAO::getInstance() {
     static UserDAO instance;

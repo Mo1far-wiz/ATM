@@ -12,7 +12,7 @@
 #include "Cards/CreditCard.h"
 #include "Cards/DebitCard.h"
 
-uint32_t CardDAO::_id = 0;
+uint32_t CardDAO::_id = 1;
 
 CardDAO &CardDAO::getInstance() {
     static CardDAO instance;

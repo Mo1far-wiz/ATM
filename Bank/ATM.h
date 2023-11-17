@@ -21,12 +21,6 @@ public:
         return atm;
     }
 
-	ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
-	}
-	// ! After class is deleted, ptrs to inserted card are not valid anymore
-	~ATM() {
-		removeInsertedCard();
-	}
     [[nodiscard]] uint32_t GetId() const override {
 		return _id;
 	}
@@ -57,6 +51,13 @@ public:
 		return user;
 	}
 
+    bool insertCard(Card* card) {
+        if(CardDAO::getInstance().getById(card->GetId()))
+        {
+            _insertedCard = card;
+        }
+    }
+
 	// Returns true if card is valid and pin is correct
 	bool login(const QString& cardNum, const QString& pin) {
 		// Check if card exists && Check if pin is correct
@@ -73,6 +74,11 @@ public:
 
 	// True - success, false - no
 	bool withdrawMoney(const uint32_t amount) {
+        if(!_insertedCard)
+        {
+            return false;
+        }
+
 		float txComission = amount * _insertedCard->GetTransactionCommission();
 		if (_moneyLeft < amount && _insertedCard->GetBalance() < amount + txComission) { return false; }
 		_moneyLeft -= amount;
@@ -93,8 +99,16 @@ public:
 		TransactionDAO::getInstance().addTransaction(&tx);
 		return true;
 	}
-	
+
+    ~ATM() {
+        removeInsertedCard();
+    }
 private:
+    ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
+    }
+    // ! After class is deleted, ptrs to inserted card are not valid anymore
+
+
 	// Id of ATM
 	const uint32_t _id;
 	// Amount of money left to withdraw
