@@ -53,7 +53,6 @@ add_executable(${PROJECT_NAME}
         Events/screentype.h
         UI/mainscreen.h UI/mainscreen.cpp UI/mainscreen.ui
         UI/withdrawscreen.h UI/withdrawscreen.cpp UI/withdrawscreen.ui)
-        UI/withdrawscreen.h UI/withdrawscreen.cpp UI/withdrawscreen.ui
 
 target_link_libraries(${PROJECT_NAME}
         Qt6::Core
