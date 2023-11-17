@@ -12,21 +12,23 @@
 #include "Cards/CreditCard.h"
 #include "Cards/DebitCard.h"
 
-uint32_t CardDAO::_id = 1;
+uint32_t CardDAO::_id = 0;
 
 CardDAO &CardDAO::getInstance() {
     static CardDAO instance;
-    initialize();
+    static bool isInitialized = false;
+    if(!isInitialized)
+    {
+        initialize();
+    }
+    isInitialized = true;
     return instance;
 }
 
 void CardDAO::initialize() {
-    static bool isInitialized = false;
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return;
-    } else if (isInitialized) {
-        qInfo() << "Database is already initialized.";
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Card' "
@@ -44,8 +46,7 @@ void CardDAO::initialize() {
                           "FOREIGN KEY(cardType_id) REFERENCES CardType(id), "
                           "FOREIGN KEY(owner)       REFERENCES User(id));");
 
-    qInfo() << "Creation of the 'Card' table was successful: " << createQuery.isActive();
-    isInitialized = true;
+    qInfo() << "Creation of the 'Card' table was successful: \t" << createQuery.isActive();
 }
 
 Card *CardDAO::getById(const uint32_t &id) const {
@@ -198,6 +199,11 @@ void CardDAO::addCard(Card *card) const {
         qCritical() << "Database is not open.";
         return;
     }
+    else if (!card)
+    {
+        qCritical() << "Can't add card, card is null.";
+        return;
+    }
 
     // Prepare the SQL query
     QSqlQuery insertCardQuery;
@@ -219,7 +225,7 @@ void CardDAO::addCard(Card *card) const {
 
     // Execute the query
     if (insertCardQuery.exec()) {
-        qInfo() << "Card with cardNumber" << card->GetCardNumber() << "added successfully.";
+        qInfo() << "Card with ID " << _id-1 << " added successfully.";
     } else {
         qCritical() << "Error adding card:" << insertCardQuery.lastError().text()
                     << "\n\t For query : " << insertCardQuery.lastQuery();
@@ -239,8 +245,9 @@ void CardDAO::UpdateCard(const Card *card, const uint32_t &creditLimit) {
         qCritical() << "Database is not open.";
         return;
     }
-    if (!card) {
-        qWarning() << "Invalid card object or card ID.";
+    else if (!card)
+    {
+        qCritical() << "Can't update card, card is null.";
         return;
     }
 

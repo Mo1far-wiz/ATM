@@ -32,7 +32,7 @@ void ATM_DAO::initialize() {
                           "currentCardId    SERIAL      NULL,"
                           "FOREIGN KEY(currentCardId) REFERENCES Card(id));");
 
-    qInfo() << "Creation of the 'ATM' table was successful: " << createQuery.isActive();
+    qInfo() << "Creation of the 'ATM' table was successful: \t" << createQuery.isActive();
     isInitialized = true;
 }
 
