@@ -31,6 +31,10 @@ public:
 		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name.toStdString() + " Surname: " + _surname.toStdString() + " phone: " + _phoneNum.toStdString()).c_str());
 	}
 
+    QList<Card*> getUserCards() const {
+		return UserDAO::getInstance().getAllUserCards(GetId());
+	}
+
 private:
 	QString _name;
 	QString _surname;
