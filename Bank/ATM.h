@@ -95,8 +95,8 @@ public:
 			Transaction tx(recvCard->GetId(), _insertedCard->GetId(), 0, totalCost);
 			TransactionDAO::getInstance().addTransaction(&tx);
 			delete recvCard;
+		    return false;
 		}
-		return false;
 	}
 
     ~ATM() {
