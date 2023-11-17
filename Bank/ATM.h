@@ -67,9 +67,12 @@ public:
 		float txComission = amount * _insertedCard->GetTransactionCommission();
 		if (_moneyLeft < amount && _insertedCard->GetBalance() < amount + txComission) { return false; }
 		_moneyLeft -= amount;
-		_insertedCard->GetBalance() -= txComission + amount;
+		double totalCost -= txComission + amount;
+		_insertedCard->GetBalance() -= totalCost;
 		CardDAO::getInstance().UpdateCard(_insertedCard->GetCardType() == CardType::Debit ? static_cast<DebitCard&>(*_insertedCard) : static_cast<CreditCard&>(*_insertedCard));
-		
+		// tx
+		Transaction tx(0, _insertedCard->getId(), 0, totalCost);
+		TransactionDAO::getInstance().addTransaction();
 		return true;
 	}
 	
