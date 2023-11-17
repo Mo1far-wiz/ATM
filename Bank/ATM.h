@@ -81,6 +81,10 @@ public:
 	}
 
 	bool sendTransaction(const QString& recvCardNum, const uint32_t amount) {
+        if(recvCardNum == _insertedCard->GetCardNumber())
+        {
+            return false;
+        }
 		// Check if card is inserted
 		if (!isCardInserted()) { return false; }
 		// Check if card balaance is enough to create transaction
@@ -94,6 +98,15 @@ public:
 			// Add tx
 			Transaction tx(recvCard->GetId(), _insertedCard->GetId(), 0, totalCost);
 			TransactionDAO::getInstance().addTransaction(&tx);
+            recvCard->receiveMoney(amount);
+            if(recvCard->GetCardType() == CardType::Debit)
+            {
+                CardDAO::getInstance().UpdateCard( dynamic_cast<DebitCard&>(*recvCard));
+            }
+            else if (recvCard->GetCardType() == CardType::Credit)
+            {
+                CardDAO::getInstance().UpdateCard( dynamic_cast<CreditCard&>(*recvCard));
+            }
 			delete recvCard;
 		    return true;
 		}
