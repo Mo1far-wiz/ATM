@@ -69,7 +69,7 @@ public:
 		_moneyLeft -= amount;
 		double totalCost -= txComission + amount;
 		_insertedCard->GetBalance() -= totalCost;
-		CardDAO::getInstance().UpdateCard(_insertedCard->GetCardType() == CardType::Debit ? static_cast<DebitCard&>(*_insertedCard) : static_cast<CreditCard&>(*_insertedCard));
+		CardDAO::getInstance().UpdateCard(_insertedCard->GetCardType() == CardType::Debit ? dynamic_cast<DebitCard&>(*_insertedCard) : dynamic_cast<CreditCard&>(*_insertedCard));
 		// tx
 		Transaction tx(0, _insertedCard->getId(), 0, totalCost);
 		TransactionDAO::getInstance().addTransaction();
