@@ -18,7 +18,7 @@ public:
 	~ATM() {
 		removeInsertedCard();
 	}
-	[[nodiscard]] uint32_t getId() const override {
+    [[nodiscard]] uint32_t GetId() const override {
 		return _id;
 	}
 	/*uint32_t GetBankId() const {
@@ -54,7 +54,7 @@ public:
 		if (Card* card = CardDAO::getInstance().getByCardNum(cardNum)) {
 			if (card->GetPinCode() == pin) {
 				removeInsertedCard();
-				_insertedCard = c;
+				_insertedCard = card;
 				return true;
 			}
 			delete card;
