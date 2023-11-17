@@ -13,7 +13,8 @@ uint32_t TransactionDAO::_id = 1;
 TransactionDAO &TransactionDAO::getInstance() {
     static TransactionDAO instance;
     static bool isInitialized = false;
-    if(!isInitialized) {
+    if(!isInitialized)
+    {
         initialize();
     }
     isInitialized = true;
