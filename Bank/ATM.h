@@ -51,6 +51,13 @@ public:
 		return user;
 	}
 
+    bool insertCard(Card* card) {
+        if(CardDAO::getInstance().getById(card->GetId()))
+        {
+            _insertedCard = card;
+        }
+    }
+
 	// Returns true if card is valid and pin is correct
 	bool login(const QString& cardNum, const QString& pin) {
 		// Check if card exists && Check if pin is correct
@@ -67,6 +74,11 @@ public:
 
 	// True - success, false - no
 	bool withdrawMoney(const uint32_t amount) {
+        if(!_insertedCard)
+        {
+            return false;
+        }
+
 		float txComission = amount * _insertedCard->GetTransactionCommission();
 		if (_moneyLeft < amount && _insertedCard->GetBalance() < amount + txComission) { return false; }
 		_moneyLeft -= amount;

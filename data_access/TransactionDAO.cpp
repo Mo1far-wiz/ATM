@@ -8,7 +8,7 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
-uint32_t TransactionDAO::_id = 0;
+uint32_t TransactionDAO::_id = 1;
 
 TransactionDAO &TransactionDAO::getInstance() {
     static TransactionDAO instance;

@@ -9,7 +9,7 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
-uint32_t ATM_DAO::_id = 0;
+uint32_t ATM_DAO::_id = 1;
 
 ATM_DAO &ATM_DAO::getInstance() {
     static ATM_DAO instance;
