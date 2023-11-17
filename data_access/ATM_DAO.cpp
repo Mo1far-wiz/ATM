@@ -9,6 +9,8 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
+uint32_t ATM_DAO::_id = 0;
+
 ATM_DAO &ATM_DAO::getInstance() {
     static ATM_DAO instance;
     initialize();
@@ -25,7 +27,7 @@ void ATM_DAO::initialize() {
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'ATM' "
-                          "(id              SERIAL      PRIMARY KEY AUTOINCREMENT, "
+                          "(id              SERIAL      PRIMARY KEY, "
                           "moneyLeft        INTEGER     NOT NULL, "
                           "currentCardId    SERIAL      NULL,"
                           "FOREIGN KEY(currentCardId) REFERENCES Card(id));");

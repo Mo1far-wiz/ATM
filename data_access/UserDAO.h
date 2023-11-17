@@ -23,6 +23,7 @@ public:
     static void addUser(const User* user);
 
 private:
+    static uint32_t _id;
     static void initialize();
 
     [[nodiscard]] User* deserializeUser(QSqlQuery& query) const;

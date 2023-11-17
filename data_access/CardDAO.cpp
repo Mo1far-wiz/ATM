@@ -12,6 +12,8 @@
 #include "Cards/CreditCard.h"
 #include "Cards/DebitCard.h"
 
+uint32_t CardDAO::_id = 0;
+
 CardDAO &CardDAO::getInstance() {
     static CardDAO instance;
     initialize();
@@ -199,10 +201,11 @@ void CardDAO::addCard(Card *card) const {
 
     // Prepare the SQL query
     QSqlQuery insertCardQuery;
-    insertCardQuery.prepare("INSERT INTO Card (cardNumber, cvv, owner, currentBalance, expireDate, "
+    insertCardQuery.prepare("INSERT INTO Card (id, cardNumber, cvv, owner, currentBalance, expireDate, "
                             "cardType_id, transactionCommission, withdrawCommission, creditLimit, pin) "
-                            "VALUES (:cardNumber, :cvv, :owner, :currentBalance, :expireDate, "
+                            "VALUES (:id, :cardNumber, :cvv, :owner, :currentBalance, :expireDate, "
                             ":cardTypeId, :transactionCommission, :withdrawCommission, :creditLimit, :pin)");
+    insertCardQuery.bindValue(":id", _id++);
     insertCardQuery.bindValue(":cardNumber", card->GetCardNumber());
     insertCardQuery.bindValue(":cvv", card->GetCVV());
     insertCardQuery.bindValue(":owner", card->GetOwnerId());

@@ -21,6 +21,7 @@ public:
     void addTransaction(const Transaction* transaction) const;
 
 private:
+    static uint32_t _id;
     static void initialize();
 
     [[nodiscard]] Transaction* deserializeTransaction(const QSqlQuery& executedQuery) const;

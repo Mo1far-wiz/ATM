@@ -8,6 +8,8 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
+uint32_t TransactionDAO::_id = 0;
+
 TransactionDAO &TransactionDAO::getInstance() {
     static TransactionDAO instance;
     initialize();
@@ -24,7 +26,7 @@ void TransactionDAO::initialize() {
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Transaction' "
-                          "(id          SERIAL      PRIMARY KEY AUTOINCREMENT, "
+                          "(id          SERIAL      PRIMARY KEY, "
                           "fromCardId   SERIAL      NOT NULL, "
                           "toCardId     SERIAL      NULL, "
                           "amount       DOUBLE      NOT NULL, "
@@ -120,8 +122,9 @@ void TransactionDAO::addTransaction(const Transaction* transaction) const{
 
     // Prepare the SQL query
     QSqlQuery insertTransactionQuery;
-    insertTransactionQuery.prepare("INSERT INTO Transaction (fromCardId, toCardId, amount) "
-                                   "VALUES (:fromCardId, :toCardId, :amount)");
+    insertTransactionQuery.prepare("INSERT INTO Transaction (id, fromCardId, toCardId, amount) "
+                                   "VALUES (:id, :fromCardId, :toCardId, :amount)");
+    insertTransactionQuery.bindValue(":id", _id++);
     insertTransactionQuery.bindValue(":fromCardId", transaction->GetFrom());
     insertTransactionQuery.bindValue(":toCardId", transaction->GetTo());
     insertTransactionQuery.bindValue(":amount", transaction->GetAmount());

@@ -9,7 +9,7 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
-
+uint32_t UserDAO::_id = 0;
 
 UserDAO &UserDAO::getInstance() {
     static UserDAO instance;
@@ -27,7 +27,7 @@ void UserDAO::initialize() {
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'User' "
-                          "(id SERIAL PRIMARY KEY AUTOINCREMENT, "
+                          "(id SERIAL PRIMARY KEY, "
                           "name TEXT NOT NULL, "
                           "surname TEXT NOT NULL, "
                           "phoneNum VARCHAR(13) NOT NULL);");
@@ -44,19 +44,21 @@ void UserDAO::addUser(const User* user) {
 
     // Prepare the SQL query
     QSqlQuery insertQuery;
-    insertQuery.prepare("INSERT INTO User (name, surname, phoneNum) VALUES (:name, :surname, :phoneNum)");
+    insertQuery.prepare("INSERT INTO User (id, name, surname, phoneNum) VALUES (:id, :name, :surname, :phoneNum)");
+    insertQuery.bindValue(":id", _id++);
     insertQuery.bindValue(":name", user->name);
     insertQuery.bindValue(":surname", user->surname);
     insertQuery.bindValue(":phoneNum", user->phoneNum);
 
     // Execute the query
     if (insertQuery.exec()) {
-        qInfo() << "User with ID" << user->id << "added successfully.";
+        qInfo() << "User added successfully.";
     } else {
         qCritical() << "Error adding user:" << insertQuery.lastError().text()
-                << "\n\t For query : " << insertQuery.lastQuery();
+                    << "\n\t For query : " << insertQuery.lastQuery();
     }
 }
+
 
 User *UserDAO::deserializeUser(QSqlQuery &selectQuery) const{
     if (selectQuery.exec()) {

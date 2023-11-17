@@ -30,6 +30,7 @@ public:
 
     void addCard(Card *card) const;
 private:
+    static uint32_t _id;
     static void initialize();
 
     Card* deserializeCard(const QSqlQuery &executedQuery) const;
