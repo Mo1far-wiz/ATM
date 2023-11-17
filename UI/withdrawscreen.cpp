@@ -43,6 +43,10 @@ void WithdrawScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
         case ATMButtonId::b_back:
             sendSwitchScreen(ScreenType::Main);
             break;
+        case ATMButtonId::r_4:
+            ui->moneyLine->clear();
+            ui->moneyLine->setFocus();
+            break;
         default:
             if (event->isNumber())
             {
@@ -52,7 +56,7 @@ void WithdrawScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
     }
 }
 
-void WithdrawScreen::init(QObject *initObject) {
+void WithdrawScreen::init(const QObject *initObject) {
     ATMScreen::init(initObject);
 
     const ATM& atm = ATM::getInstance();

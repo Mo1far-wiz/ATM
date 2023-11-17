@@ -72,9 +72,9 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
-          <widget class="EnterPinScreen" name="enterPinScreen">
+          <widget class="DoubleInputScreen" name="doubleInputScreen">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -228,9 +228,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EnterPinScreen</class>
+   <class>DoubleInputScreen</class>
    <extends>QWidget</extends>
-   <header>UI/enterpinscreen.h</header>
+   <header>UI/doubleinputscreen.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

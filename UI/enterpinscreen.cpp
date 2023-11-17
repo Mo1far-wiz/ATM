@@ -8,7 +8,7 @@ EnterPinScreen::EnterPinScreen(QWidget *parent)
     , ui(new Ui::EnterPinScreen)
 {
     ui->setupUi(this);
-    defaultText = ui->label_2->text();
+    defaultText = ui->label->text();
 }
 
 EnterPinScreen::~EnterPinScreen()
@@ -22,7 +22,7 @@ void EnterPinScreen::onATMButtonPressed(ATMButtonPressedEvent *event)
 
     ATMButtonId id = event->getButtonId();
 
-    ui->label_2->setText(defaultText);
+    ui->label->setText(defaultText);
     
     switch (id) {
         case ATMButtonId::b_back:
@@ -36,7 +36,7 @@ void EnterPinScreen::onATMButtonPressed(ATMButtonPressedEvent *event)
             }
             else
             {
-                ui->label_2->setText("Login failed!");
+                ui->label->setText("Login failed!");
             }
             break;
 
@@ -73,12 +73,12 @@ bool EnterPinScreen::tryLogin() const {
     return ATM::getInstance().insertCard(num, pin);
 }
 
-void EnterPinScreen::init(QObject* initObject) {
+void EnterPinScreen::init(const QObject* initObject) {
     ATMScreen::init(initObject);
 
     ui->cardNumber->clear();
     ui->cardPin->clear();
-    ui->label_2->setText(defaultText);
+    ui->label->setText(defaultText);
     currentLine = ui->cardNumber;
     currentLine->setFocus();
 }
