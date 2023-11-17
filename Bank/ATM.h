@@ -103,10 +103,10 @@ public:
         removeInsertedCard();
     }
 private:
+    // ! After class is deleted, ptrs to inserted card are not valid anymore
     ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
     }
-    // ! After class is deleted, ptrs to inserted card are not valid anymore
-
+	// Update card in DB
 	void updateCard() {
 		if(_insertedCard->GetCardType() == CardType::Debit) {
             CardDAO::getInstance().UpdateCard(dynamic_cast<DebitCard&>(*_insertedCard));
