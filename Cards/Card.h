@@ -11,7 +11,7 @@
 
 class CardDAO;
 
-class Card : IId {
+class Card : IId, QObject {
 public:
     uint32_t GetId() const override {
 		return _id;
