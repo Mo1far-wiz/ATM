@@ -11,6 +11,8 @@
 
 #include "User/User.h"
 
+class User;
+
 class UserDAO {
 public:
     static UserDAO& getInstance();
@@ -20,7 +22,7 @@ public:
     [[nodiscard]] User* getByCardNum(const QString& cardNum) const;
     [[nodiscard]] QList<Card*> getAllUserCards(const uint32_t &userId) const;
 
-    static void addUser(const User* user);
+    void addUser(const User* user);
 
 private:
     static uint32_t _id;

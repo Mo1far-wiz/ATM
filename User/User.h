@@ -6,6 +6,7 @@
 #include <QtCore/QObject>
 
 #include "Cards/Card.h"
+#include "data_access/UserDAO.h"
 
 class User : IId {
 public:
@@ -29,6 +30,10 @@ public:
 	}
 	QString ToString() const {
 		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name.toStdString() + " Surname: " + _surname.toStdString() + " phone: " + _phoneNum.toStdString()).c_str());
+	}
+
+    QList<Card*> getUserCards() const {
+		return CardDAO::getInstance().getAllUserCards(GetId());
 	}
 
 private:

@@ -6,12 +6,13 @@
 #include "../IId.h"
 #include "CardType.h"
 #include "data_access/CardDAO.h"
+#include "Bank/Transaction.h"
+#include "data_access/TransactionDAO.h"
 
 class CardDAO;
 
 class Card : IId {
 public:
-	using DAO = CardDAO;
     uint32_t GetId() const override {
 		return _id;
 	}
@@ -49,6 +50,10 @@ public:
 
 	virtual QString ToString() const {
 		return ("[Card]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString()).c_str();
+	}
+
+	QList<Transaction*> GetAllTransactions() {
+		return TransactionDAO::getInstance().getCardTransactions(GetId());
 	}
 
 protected:

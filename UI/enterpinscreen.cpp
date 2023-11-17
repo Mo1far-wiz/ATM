@@ -70,7 +70,7 @@ bool EnterPinScreen::tryLogin() const {
     QString num = ui->cardNumber->text();
     QString pin = ui->cardPin->text();
     qDebug("Login attempt. Card %s, PIN %s", qUtf8Printable(num), qUtf8Printable(pin));
-    return ATM::getInstance().login(num, pin);
+    return ATM::getInstance().insertCard(num, pin);
 }
 
 void EnterPinScreen::init(const QObject* initObject) {
