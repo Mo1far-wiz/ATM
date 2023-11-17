@@ -6,6 +6,8 @@
 #include "../IId.h"
 #include "CardType.h"
 #include "data_access/CardDAO.h"
+#include "Bank/Transaction.h"
+#include "data_access/TransactionDAO.h"
 
 class CardDAO;
 

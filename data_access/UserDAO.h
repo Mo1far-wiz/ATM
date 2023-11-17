@@ -11,6 +11,8 @@
 
 #include "User/User.h"
 
+class User;
+
 class UserDAO {
 public:
     static UserDAO& getInstance();
