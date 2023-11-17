@@ -78,6 +78,9 @@ void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event, QObject* initObje
         case ScreenType::Main:
             screen = ui->mainScreen;
             break;
+        case ScreenType::Withdraw:
+            screen = ui->withdrawScreen;
+            break;
     }
     screen->init(initObject);
     ui->screenStack->setCurrentWidget(screen);

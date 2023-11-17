@@ -23,6 +23,7 @@ void MainScreen::onATMButtonPressed(ATMButtonPressedEvent *event) {
     switch (id)
     {
         case ATMButtonId::l_3:
+            sendSwitchScreen(ScreenType::Withdraw);
             break;
         case ATMButtonId::l_4:
             break;
