@@ -30,7 +30,7 @@ void CardDAO::initialize() {
     }
 
     QSqlQuery createQuery("CREATE TABLE IF NOT EXISTS 'Card' "
-                          "(id                      SERIAL          PRIMARY KEY AUTOINCREMENT, "
+                          "(id                      SERIAL          PRIMARY KEY, "
                           "cardNumber               CHAR(16)        NOT NULL, "
                           "cvv                      CHAR(3)         NOT NULL, "
                           "owner                    SERIAL          NOT NULL, "
