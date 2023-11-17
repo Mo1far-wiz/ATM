@@ -28,10 +28,9 @@ public:
     void UpdateCard(const DebitCard& card);
     void UpdateCard(const CreditCard& card);
 
-    void addCard(const int id, const QString &cardNumber, const QString &cvv, uint32_t owner, double currentBalance,
-                          const QDate &expireDate, int cardTypeId, float transactionCommission,
-                          float withdrawCommission, int creditLimit, const QString &pin) const;
+    void addCard(Card *card) const;
 private:
+    static uint32_t _id;
     static void initialize();
 
     Card* deserializeCard(const QSqlQuery &executedQuery) const;

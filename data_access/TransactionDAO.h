@@ -18,9 +18,10 @@ public:
     [[nodiscard]] QList<Transaction*> getCardTransactions(const uint32_t &cardId) const;
     [[nodiscard]] QList<Transaction*> getUserTransactions(const uint32_t &userId) const;
 
-    void addTransaction(uint32_t id, uint32_t fromCardId, uint32_t toCardId, double amount) const;
+    void addTransaction(const Transaction* transaction) const;
 
 private:
+    static uint32_t _id;
     static void initialize();
 
     [[nodiscard]] Transaction* deserializeTransaction(const QSqlQuery& executedQuery) const;

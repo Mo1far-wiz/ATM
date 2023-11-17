@@ -9,7 +9,7 @@
 #include <QtSql>
 #include <QtTest/qtestcase.h>
 
-
+uint32_t UserDAO::_id = 0;
 
 UserDAO &UserDAO::getInstance() {
     static UserDAO instance;
@@ -36,7 +36,7 @@ void UserDAO::initialize() {
     isInitialized = true;
 }
 
-void UserDAO::addUser(uint32_t id, const QString &name, const QString &surname, const QString &phoneNum) {
+void UserDAO::addUser(const User* user) {
     if (!QSqlDatabase::database().isOpen()) {
         qCritical() << "Database is not open.";
         return;
@@ -45,19 +45,20 @@ void UserDAO::addUser(uint32_t id, const QString &name, const QString &surname, 
     // Prepare the SQL query
     QSqlQuery insertQuery;
     insertQuery.prepare("INSERT INTO User (id, name, surname, phoneNum) VALUES (:id, :name, :surname, :phoneNum)");
-    insertQuery.bindValue(":id", id);
-    insertQuery.bindValue(":name", name);
-    insertQuery.bindValue(":surname", surname);
-    insertQuery.bindValue(":phoneNum", phoneNum);
+    insertQuery.bindValue(":id", _id++);
+    insertQuery.bindValue(":name", user->GetName());
+    insertQuery.bindValue(":surname", user->GetSurname());
+    insertQuery.bindValue(":phoneNum", user->GetPhoneNumber());
 
     // Execute the query
     if (insertQuery.exec()) {
-        qInfo() << "User with ID" << id << "added successfully.";
+        qInfo() << "User added successfully.";
     } else {
         qCritical() << "Error adding user:" << insertQuery.lastError().text()
-                << "\n\t For query : " << insertQuery.lastQuery();
+                    << "\n\t For query : " << insertQuery.lastQuery();
     }
 }
+
 
 User *UserDAO::deserializeUser(QSqlQuery &selectQuery) const{
     if (selectQuery.exec()) {

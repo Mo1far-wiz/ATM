@@ -4,6 +4,9 @@
 #include <QString>
 #include "data_access/UserDAO.h"
 #include "Cards/Card.h"
+#include "Cards/DebitCard.h"
+#include "Cards/CreditCard.h"
+#include "data_access/TransactionDAO.h"
 #include <functional>
 
 class Bank;
@@ -12,31 +15,38 @@ struct CVV;
 
 class ATM : IId {
 public:
+
+    static ATM& getInstance() {
+        static ATM atm(0, 100000);
+        return atm;
+    }
+
 	ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
 	}
 	// ! After class is deleted, ptrs to inserted card are not valid anymore
 	~ATM() {
-		RemoveInsertedCard();
+		removeInsertedCard();
 	}
-	[[nodiscard]] uint32_t GetId() const override {
+    [[nodiscard]] uint32_t GetId() const override {
 		return _id;
 	}
 	/*uint32_t GetBankId() const {
 		return _bankId;
 	}*/
-	[[nodiscard]] uint32_t GetAvailableWithdraw() const {
+	[[nodiscard]] uint32_t getAvailableWithdraw() const {
 		return _moneyLeft;
 	}
-	[[nodiscard]] uint32_t GetInsertedCardId() const {
+	[[nodiscard]] uint32_t getInsertedCardId() const {
 		return _insertedCard->GetId();
 	}
-	bool IsCardInserted() {
+	bool isCardInserted() {
 		return _insertedCard;
 	}
-	void RemoveInsertedCard() {
-			delete _insertedCard;
+	void removeInsertedCard() {
+		delete _insertedCard;
+		_insertedCard = nullptr;
 	}
-	const Card* GetInsertedCard() const {
+	const Card* getInsertedCard() const {
 		return _insertedCard;
 	}
 	const User* getInsertedCardOwner(const QString& cardNum) {
@@ -52,13 +62,36 @@ public:
 		// Check if card exists && Check if pin is correct
 		if (Card* card = CardDAO::getInstance().getByCardNum(cardNum)) {
 			if (card->GetPinCode() == pin) {
-				RemoveInsertedCard();
+				removeInsertedCard();
 				_insertedCard = card;
 				return true;
 			}
 			delete card;
 		}
 		return false;
+	}
+
+	// True - success, false - no
+	bool withdrawMoney(const uint32_t amount) {
+		float txComission = amount * _insertedCard->GetTransactionCommission();
+		if (_moneyLeft < amount && _insertedCard->GetBalance() < amount + txComission) { return false; }
+		_moneyLeft -= amount;
+		double totalCost = txComission + amount;
+		_insertedCard->GetBalance() -= totalCost;
+
+        if(_insertedCard->GetCardType() == CardType::Debit)
+        {
+            CardDAO::getInstance().UpdateCard( dynamic_cast<DebitCard&>(*_insertedCard));
+        }
+        else if (_insertedCard->GetCardType() == CardType::Credit)
+        {
+            CardDAO::getInstance().UpdateCard( dynamic_cast<CreditCard&>(*_insertedCard));
+        }
+
+        // tx
+		Transaction tx(0, _insertedCard->GetId(), 0, totalCost);
+		TransactionDAO::getInstance().addTransaction(&tx);
+		return true;
 	}
 	
 private:
@@ -68,7 +101,4 @@ private:
 	uint32_t _moneyLeft;
 	// Currently inserted card
 	Card* _insertedCard = nullptr;
-
-private:
-	
 };

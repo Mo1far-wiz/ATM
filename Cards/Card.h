@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <utility>
 #include <QDate>
@@ -18,6 +19,9 @@ public:
 		return _cardNumber;
 	}
 	double GetBalance() const {
+		return _currentBalance;
+	}
+	double& GetBalance() {
 		return _currentBalance;
 	}
 	const QString& GetCVV() const {

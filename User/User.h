@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <QString>
@@ -5,37 +7,34 @@
 
 #include "Cards/Card.h"
 
-class Card;
-
-struct User {
-    User(const uint32_t id, const QString& name, const QString& surname, const QString& phoneNum)
-            : id(id), name(name), surname(surname), phoneNum(phoneNum) {
-
+class User : IId {
+public:
+	User() = delete;
+	User(const uint32_t id, const QString& name, const QString& surname, const QString& phoneNum)
+		: _id(id), _name(name), _surname(surname), _phoneNum(phoneNum) {
     }
-    ~User() {}
-    uint32_t id;
-    QString name;
-    QString surname;
-    QString phoneNum;
-    QList<Card*> cards;
+	~User() {}
 
-    QString toString() const {
-        std::string result;
+	uint32_t GetId() const override {
+		return _id;
+	}
+	const QString& GetName() const {
+		return _name;
+	}
+	const QString& GetSurname() const {
+		return _surname;
+	}
+	const QString& GetPhoneNumber() const {
+		return _phoneNum;
+	}
+	QString ToString() const {
+		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name.toStdString() + " Surname: " + _surname.toStdString() + " phone: " + _phoneNum.toStdString()).c_str());
+	}
 
-        result += "ID: " + std::to_string(id) + "\n";
-        result += "Name: " + name.toStdString() + "\n";
-        result += "Surname: " + surname.toStdString() + "\n";
-        result += "Phone Number: " + phoneNum.toStdString() + "\n";
-        result += "Cards: ";
-
-        for (auto card: cards) {
-            result += card->ToString().toStdString() + " ";
-        }
-        result += "\n";
-
-        return result.c_str();
-    }
-
-
+private:
+	QString _name;
+	QString _surname;
+	QString _phoneNum;
+	const uint32_t _id;
 };
 

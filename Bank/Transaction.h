@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <QString>
 #include "IId.h"
@@ -19,7 +21,6 @@ public:
     double GetAmount() const {
         return _amount;
     }
-
     QString ToString() const {
         return ("[Transaction]: Id: " + std::to_string(_id) + " From: " + std::to_string(_from) + " To: " + std::to_string(_to) + " Amount: " + std::to_string(_amount)).c_str();
     }
