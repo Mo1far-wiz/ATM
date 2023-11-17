@@ -70,7 +70,7 @@ public:
             return false;
         }
 		float txComission = amount * _insertedCard->GetWithdrawCommission();
-		if (_moneyLeft < amount && _insertedCard->GetBalance() < amount + txComission) { return false; }
+		if (_moneyLeft < amount || _insertedCard->GetBalance() < amount + txComission) { return false; }
 		_moneyLeft -= amount;
 		double totalCost = amount + txComission;
 		_insertedCard->GetBalance() -= totalCost;
