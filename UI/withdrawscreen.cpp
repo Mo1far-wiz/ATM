@@ -65,7 +65,7 @@ void WithdrawScreen::init(const QObject *initObject) {
     if (const CreditCard* creditCard = dynamic_cast<const CreditCard*>(card))
     {
         uint32_t limit = creditCard->GetCreditLimit();
-        uint32_t balance = creditCard->GetBalance() + limit;
+        uint32_t balance = creditCard->GetBalance();
         ui->yourBalanceLabel->setText("Your balance: " + QString::number(balance) + ", with credit limit: " + QString::number(limit));
     }
     else
