@@ -145,6 +145,19 @@ QString DoubleInputScreen::getBalance() const {
             return "";
 
         case Mode::Transaction:
-            return "Your balance: " + QString::number(ATM::getInstance().getInsertedCard()->GetBalance());
+            return getCardBalance();
+    }
+}
+
+QString DoubleInputScreen::getCardBalance() const {
+    if (const CreditCard* creditCard = dynamic_cast<const CreditCard*>(ATM::getInstance().getInsertedCard()))
+    {
+        uint32_t limit = creditCard->GetCreditLimit();
+        uint32_t balance = creditCard->GetBalance() + limit;
+        return "Your balance: " + QString::number(balance) + ", with credit limit: " + QString::number(limit);
+    }
+    else
+    {
+        return "Your balance: " + QString::number(ATM::getInstance().getInsertedCard()->GetBalance());
     }
 }

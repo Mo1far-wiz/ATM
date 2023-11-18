@@ -36,6 +36,8 @@ private:
 
     QString getBalance() const;
 
+    QString getCardBalance() const;
+
     Mode mode = Mode::EnterPin;
 
     QString defaultText;
