@@ -141,7 +141,6 @@ int main(int argc, char *argv[])
     } else {
         // trigger initializations after the db connection is established
         initDB();
-        });
     }
 
 
