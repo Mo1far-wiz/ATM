@@ -46,6 +46,12 @@ public:
 	float GetWithdrawCommission() const {
 		return _withdrawCommission;
 	}
+    void receiveMoney(double amount)
+    {
+        if(amount > 0) {
+            _currentBalance += amount;
+        }
+    }
 	virtual ~Card() {}
 
 	virtual QString ToString() const {
