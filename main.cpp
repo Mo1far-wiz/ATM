@@ -34,13 +34,13 @@ void initDB() {
 
     // add 2 cards to each user
     DebitCard* debit1   = new DebitCard (1, "11", "111", 1, 1987, QDate::currentDate().addDays(10), 0.01, 0.02, 0, "111");
-    CreditCard* credit1 = new CreditCard(2, "12", "111", 1, 1987, QDate::currentDate().addDays(10), 0.02, 0.03, 1000, "111");
+    CreditCard* credit1 = new CreditCard(2, "12", "111", 1, 1987 + 1000, QDate::currentDate().addDays(10), 0.02, 0.03, 1000, "111");
 
     DebitCard* debit2   = new DebitCard (3, "21", "111", 2, 1987, QDate::currentDate().addDays(10), 0.01, 0.02, 0, "111");
-    CreditCard* credit2 = new CreditCard(4, "22", "111", 2, 1987, QDate::currentDate().addDays(10), 0.02, 0.03, 2000, "111");
+    CreditCard* credit2 = new CreditCard(4, "22", "111", 2, 1987 + 2000, QDate::currentDate().addDays(10), 0.02, 0.03, 2000, "111");
 
     DebitCard* debit3   = new DebitCard (5, "31", "111", 3, 1987, QDate::currentDate().addDays(10), 0.01, 0.02, 0, "111");
-    CreditCard* credit3 = new CreditCard(6, "32", "111", 3, 1987, QDate::currentDate().addDays(10), 0.02, 0.03, 3000, "111");
+    CreditCard* credit3 = new CreditCard(6, "32", "111", 3, 1987 + 3000, QDate::currentDate().addDays(10), 0.02, 0.03, 3000, "111");
 
     cardDao.addCard(debit1);
     cardDao.addCard(credit1);
