@@ -62,7 +62,16 @@ void WithdrawScreen::init(const QObject *initObject) {
     const ATM& atm = ATM::getInstance();
     const Card* card = atm.getInsertedCard();
     ui->mainLabel->setText("Enter desired amount");
-    ui->yourBalanceLabel->setText("Your balance: " + QString::number(card->GetBalance()));
+    if (const CreditCard* creditCard = dynamic_cast<const CreditCard*>(card))
+    {
+        uint32_t limit = creditCard->GetCreditLimit();
+        uint32_t balance = creditCard->GetBalance() + limit;
+        ui->yourBalanceLabel->setText("Your balance: " + QString::number(balance) + ", with credit limit: " + QString::number(limit));
+    }
+    else
+    {
+        ui->yourBalanceLabel->setText("Your balance: " + QString::number(card->GetBalance()));
+    }
     ui->withdrawAmmountLabel->setText("Possible to withdraw: " + QString::number(atm.getAvailableWithdraw()));
     ui->moneyLine->clear();
     ui->moneyLine->setFocus();
