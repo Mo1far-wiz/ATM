@@ -73,7 +73,7 @@ public:
 		_moneyLeft -= amount;
 		double totalCost = amount + txComission;
 		_insertedCard->GetBalance() -= totalCost;
-		updateCard();
+		updateCard(_insertedCard);
         // Add tx
 		Transaction tx(0, _insertedCard->GetId(), 0, totalCost);
 		TransactionDAO::getInstance().addTransaction(&tx);
@@ -94,7 +94,7 @@ public:
 		if (Card* recvCard = CardDAO::getInstance().getByCardNum(recvCardNum)) {	
 			double totalCost = amount + txComission;
 			_insertedCard->GetBalance() -= totalCost;
-			updateCard();
+			updateCard(_insertedCard);
 			// Add tx
 			Transaction tx(0, _insertedCard->GetId(), recvCard->GetId(), amount);
 			TransactionDAO::getInstance().addTransaction(&tx);
@@ -114,7 +114,7 @@ private:
     ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
     }
 	// Update card in DB
-	void updateCard(Card* card = _insertedCard) {
+	void updateCard(Card* card) {
 		if(card->GetCardType() == CardType::Debit) {
             CardDAO::getInstance().UpdateCard(dynamic_cast<DebitCard&>(*card));
         }
