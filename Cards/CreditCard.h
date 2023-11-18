@@ -8,10 +8,7 @@ public:
                const QDate& expireDate, const float transactionCommission,
                const float withdrawCommission, const uint32_t creditLimit, const QString& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Credit, transactionCommission, withdrawCommission, pin),
-		_creditLimit(creditLimit)
-	{
-        _currentBalance += creditLimit;
-    }
+		_creditLimit(creditLimit){}
 
 	uint32_t GetCreditLimit() const {
 		return _creditLimit;
