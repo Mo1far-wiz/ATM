@@ -107,6 +107,7 @@ void DoubleInputScreen::onEnterPressed() {
             {
                 ui->label->setText("Transaction failed!");
             }
+            ui->labelOptional->setText(getBalance());
             break;
     }
 }
