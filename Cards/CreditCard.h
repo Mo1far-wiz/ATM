@@ -9,7 +9,9 @@ public:
                const float withdrawCommission, const uint32_t creditLimit, const QString& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Credit, transactionCommission, withdrawCommission, pin),
 		_creditLimit(creditLimit)
-	{}
+	{
+        _currentBalance += creditLimit;
+    }
 
 	uint32_t GetCreditLimit() const {
 		return _creditLimit;
@@ -18,5 +20,5 @@ public:
 		return ("[CreditCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString() + " creditLimit: " + std::to_string(_creditLimit)).c_str();
 	}
 private:
-	size_t _creditLimit;
+    const uint32_t _creditLimit;
 };
