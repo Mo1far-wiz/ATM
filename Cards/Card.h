@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <utility>
+#include <memory>
 #include <QDate>
 #include "../IId.h"
 #include "CardType.h"
@@ -58,8 +59,13 @@ public:
 		return ("[Card]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString()).c_str();
 	}
 
-	QList<Transaction*> GetAllTransactions() const {
-		return TransactionDAO::getInstance().getCardTransactions(GetId());
+	QList<std::unique_ptr<Transaction>> GetAllTransactions() const {
+		QList<std::unique_ptr<Transaction>> l;
+		for (Transaction* tx : TransactionDAO::getInstance().getCardTransactions(GetId())) {
+			if (!tx) { return QList<std::unique_ptr<Transaction>>(); }
+			l.push_back(std::unique_ptr<Transaction>(tx));
+		}
+		return l;
 	}
 
 protected:
