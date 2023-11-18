@@ -96,7 +96,7 @@ public:
 			_insertedCard->GetBalance() -= totalCost;
 			updateCard();
 			// Add tx
-			Transaction tx(recvCard->GetId(), _insertedCard->GetId(), 0, totalCost);
+			Transaction tx(0, _insertedCard->GetId(), recvCard->GetId(), amount);
 			TransactionDAO::getInstance().addTransaction(&tx);
             recvCard->receiveMoney(amount);
             if(recvCard->GetCardType() == CardType::Debit)
