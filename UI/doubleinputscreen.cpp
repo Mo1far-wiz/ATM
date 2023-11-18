@@ -153,7 +153,7 @@ QString DoubleInputScreen::getCardBalance() const {
     if (const CreditCard* creditCard = dynamic_cast<const CreditCard*>(ATM::getInstance().getInsertedCard()))
     {
         uint32_t limit = creditCard->GetCreditLimit();
-        uint32_t balance = creditCard->GetBalance() + limit;
+        uint32_t balance = creditCard->GetBalance();
         return "Your balance: " + QString::number(balance) + ", with credit limit: " + QString::number(limit);
     }
     else
