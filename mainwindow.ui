@@ -72,7 +72,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="DoubleInputScreen" name="doubleInputScreen">
            <property name="sizePolicy">
@@ -82,6 +82,7 @@
             </sizepolicy>
            </property>
           </widget>
+          <widget class="InfoScreen" name="infoScreen"/>
           <widget class="MainScreen" name="mainScreen"/>
           <widget class="WithdrawScreen" name="withdrawScreen"/>
           <widget class="DefaultScreen" name="defaultScreen"/>
@@ -249,6 +250,12 @@
    <class>WithdrawScreen</class>
    <extends>QWidget</extends>
    <header>UI/withdrawscreen.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>InfoScreen</class>
+   <extends>QWidget</extends>
+   <header>UI/infoscreen.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
