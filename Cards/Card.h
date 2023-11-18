@@ -59,11 +59,11 @@ public:
 		return ("[Card]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString()).c_str();
 	}
 
-	QList<std::unique_ptr<Transaction>> GetAllTransactions() const {
-		QList<std::unique_ptr<Transaction>> l;
+	QList<std::shared_ptr<Transaction>> GetAllTransactions() const {
+		QList<std::shared_ptr<Transaction>> l;
 		for (Transaction* tx : TransactionDAO::getInstance().getCardTransactions(GetId())) {
-			if (!tx) { return QList<std::unique_ptr<Transaction>>(); }
-			l.push_back(std::unique_ptr<Transaction>(tx));
+			if (!tx) { return QList<std::shared_ptr<Transaction>>(); }
+			l.push_back(std::shared_ptr<Transaction>(tx));
 		}
 		return l;
 	}
