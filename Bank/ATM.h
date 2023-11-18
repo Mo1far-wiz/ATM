@@ -99,14 +99,7 @@ public:
 			Transaction tx(0, _insertedCard->GetId(), recvCard->GetId(), amount);
 			TransactionDAO::getInstance().addTransaction(&tx);
             recvCard->receiveMoney(amount);
-            if(recvCard->GetCardType() == CardType::Debit)
-            {
-                CardDAO::getInstance().UpdateCard( dynamic_cast<DebitCard&>(*recvCard));
-            }
-            else if (recvCard->GetCardType() == CardType::Credit)
-            {
-                CardDAO::getInstance().UpdateCard( dynamic_cast<CreditCard&>(*recvCard));
-            }
+			updateCard(recvCard);
 			delete recvCard;
 		    return true;
 		}
@@ -121,12 +114,12 @@ private:
     ATM(const uint32_t id, const uint32_t& moneyLeft) : _id(id), _insertedCard(nullptr), _moneyLeft(moneyLeft) {
     }
 	// Update card in DB
-	void updateCard() {
-		if(_insertedCard->GetCardType() == CardType::Debit) {
-            CardDAO::getInstance().UpdateCard(dynamic_cast<DebitCard&>(*_insertedCard));
+	void updateCard(Card* card = _insertedCard) {
+		if(card->GetCardType() == CardType::Debit) {
+            CardDAO::getInstance().UpdateCard(dynamic_cast<DebitCard&>(*card));
         }
-        else if (_insertedCard->GetCardType() == CardType::Credit) {
-            CardDAO::getInstance().UpdateCard(dynamic_cast<CreditCard&>(*_insertedCard));
+        else if (card->GetCardType() == CardType::Credit) {
+            CardDAO::getInstance().UpdateCard(dynamic_cast<CreditCard&>(*card));
         }
 	}
 	// Id of ATM
