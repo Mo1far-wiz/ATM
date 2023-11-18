@@ -32,8 +32,13 @@ public:
 		return (("[User]: Id: " + std::to_string(_id) + " Name: " + _name.toStdString() + " Surname: " + _surname.toStdString() + " phone: " + _phoneNum.toStdString()).c_str());
 	}
 
-    QList<Card*> getUserCards() const {
-		return CardDAO::getInstance().getAllUserCards(GetId());
+	QList<std::shared_ptr<Card>> getUserCards() const {
+		QList<std::shared_ptr<Card>> l;
+		for (Card* card : CardDAO::getInstance().getAllUserCards(GetId())) {
+			if (!card) { return QList<std::shared_ptr<Card>>(); }
+			l.push_back(std::shared_ptr<Card>(card));
+		}
+		return l;
 	}
 
 private:

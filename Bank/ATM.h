@@ -37,12 +37,12 @@ public:
 		return _insertedCard;
 	}
 
-	const User* getInsertedCardOwner() {
+	std::shared_ptr<User> getInsertedCardOwner() {
 		User* user = nullptr;
 		if (_insertedCard) {
 			user = UserDAO::getInstance().getByCardNum(_insertedCard->GetCardNumber());
 		}
-		return user;
+		return std::shared_ptr<User>(user);
 	}
 
 	// Returns true if card is valid and pin is correct
