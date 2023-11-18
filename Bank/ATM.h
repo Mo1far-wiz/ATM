@@ -110,6 +110,7 @@ public:
 			delete recvCard;
 		    return true;
 		}
+        return false;
 	}
 
     ~ATM() {

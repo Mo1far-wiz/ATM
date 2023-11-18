@@ -58,7 +58,7 @@ public:
 		return ("[Card]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString()).c_str();
 	}
 
-	QList<Transaction*> GetAllTransactions() {
+	QList<Transaction*> GetAllTransactions() const {
 		return TransactionDAO::getInstance().getCardTransactions(GetId());
 	}
 

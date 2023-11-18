@@ -67,7 +67,7 @@ void MainWindow::buttonClick(int id)
 void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event)
 {
     ATMScreen* screen;
-    switch (event->getScreenType()) // init in each case probably
+    switch (event->getScreenType())
     {
         case ScreenType::Default:
             screen = ui->defaultScreen;
@@ -80,6 +80,9 @@ void MainWindow::onSwitchScreenEvent(SwitchScreenEvent *event)
             break;
         case ScreenType::Withdraw:
             screen = ui->withdrawScreen;
+            break;
+        case ScreenType::Info:
+            screen = ui->infoScreen;
             break;
     }
     screen->init(event->getInitObject());
