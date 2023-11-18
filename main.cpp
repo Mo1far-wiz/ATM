@@ -93,6 +93,37 @@ void initDB() {
     transactionDao.addTransaction(transaction64);
     transactionDao.addTransaction(transaction65);
     transactionDao.addTransaction(transaction63);
+
+    // Delete dynamically allocated objects
+    delete bank;
+    delete debitBank;
+    delete user1;
+    delete user2;
+    delete user3;
+    delete debit1;
+    delete credit1;
+    delete debit2;
+    delete credit2;
+    delete debit3;
+    delete credit3;
+    delete transaction12;
+    delete transaction13;
+    delete transaction15;
+    delete transaction21;
+    delete transaction24;
+    delete transaction26;
+    delete transaction34;
+    delete transaction32;
+    delete transaction35;
+    delete transaction41;
+    delete transaction45;
+    delete transaction46;
+    delete transaction51;
+    delete transaction52;
+    delete transaction53;
+    delete transaction64;
+    delete transaction65;
+    delete transaction63;
 }
 
 int main(int argc, char *argv[])

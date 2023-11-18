@@ -24,8 +24,8 @@ void InfoScreen::init(const QObject *initObject) {
         ui->mainLabel->setText("User info");
         ui->mainInfo->setText(user->GetName() + " " + user->GetSurname());
         ui->optionalInfo->setText(user->GetPhoneNumber());
-        const QList<Card*>& cards = user->getUserCards();
-        for (Card* card : cards)
+        const QList<std::shared_ptr<Card>>& cards = user->getUserCards();
+        for (const std::shared_ptr<Card>& card : cards)
         {
             ui->infoList->addItem(card->ToString());
         }
@@ -36,8 +36,8 @@ void InfoScreen::init(const QObject *initObject) {
         ui->mainLabel->setText("Card info");
         ui->mainInfo->setText(card->GetCardNumber());
         ui->optionalInfo->setText("");
-        const QList<Transaction*>& transactions = card->GetAllTransactions();
-        for (Transaction* transaction : transactions)
+        const QList<std::shared_ptr<Transaction>>& transactions = card->GetAllTransactions();
+        for (const std::shared_ptr<Transaction>& transaction : transactions)
         {
             ui->infoList->addItem(transaction->ToString());
         }
