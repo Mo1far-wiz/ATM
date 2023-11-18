@@ -11,6 +11,6 @@ public:
 	{}
 
 	virtual QString ToString() const {
-		return ("[DebitCard]: Id: " + std::to_string(_id) + " Number: " + _cardNumber.toStdString() + " OwnerId: " + std::to_string(_ownerId) + " cvv: " + _cvv.toStdString()).c_str();
+		return ("[DebitCard]: Id: " + std::to_string(_id) + ", Number: " + _cardNumber.toStdString() + ", OwnerId: " + std::to_string(_ownerId) + ", cvv: " + _cvv.toStdString()).c_str();
 	}
 };

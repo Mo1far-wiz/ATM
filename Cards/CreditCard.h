@@ -6,7 +6,7 @@ public:
 	CreditCard(const uint32_t id, const QString& cardNumber,
                const QString& cvv, const uint32_t ownerId, const double currentBalance,
                const QDate& expireDate, const float transactionCommission,
-               const float withdrawCommission, const uint32_t creditLimit, const QString& pin)
+               const float withdrawCommission, const double creditLimit, const QString& pin)
 		: Card(id, cardNumber, cvv, ownerId, currentBalance, expireDate, CardType::Credit, transactionCommission, withdrawCommission, pin),
 		_creditLimit(creditLimit){}
 
@@ -22,5 +22,5 @@ public:
 		+ ", debt: " + std::to_string(GetDebt())).c_str();
 	}
 private:
-    const uint32_t _creditLimit;
+    const double _creditLimit;
 };
